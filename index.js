@@ -8,18 +8,20 @@ let enemyFieldArray = Array.from(enemyField);
 const makeShoot = (e) => {
   const target = e.target;
   currIndex = enemyFieldArray.indexOf(target);
-  if (target.className === "sea-battle__cell-enemy") {
+  console.log(enemyFieldArray[currIndex].classList.contains("brown"));
+  console.log(target.innerHTML);
+  if (target.classList.contains("sea-battle__cell-enemy")) {
     if (target.innerHTML === ".") {
       return;
     } else if (
       // 4 ship attack crush
       //top target
-      enemyFieldArray[currIndex].style.backgroundColor === "brown" &&
+      enemyFieldArray[currIndex].classList.contains("brown") &&
       enemyFieldArray[currIndex + 1].innerHTML === "X" &&
       enemyFieldArray[currIndex + 2].innerHTML === "X" &&
       enemyFieldArray[currIndex + 3].innerHTML === "X" &&
-      enemyFieldArray[currIndex + 4].style.backgroundColor !== "brown" &&
-      enemyFieldArray[currIndex - 1].style.backgroundColor !== "brown"
+      !enemyFieldArray[currIndex + 4].classList.contains("brown") &&
+      !enemyFieldArray[currIndex - 1].classList.contains("brown")
     ) {
       enemyFieldArray[currIndex].innerHTML = "X";
       enemyFieldArray[currIndex + 10].innerHTML = ".";
@@ -43,12 +45,12 @@ const makeShoot = (e) => {
     } else if (
       // 4 ship attack crush
       //middel 1 target
-      enemyFieldArray[currIndex].style.backgroundColor === "brown" &&
+      enemyFieldArray[currIndex].classList.contains("brown") &&
       enemyFieldArray[currIndex + 1].innerHTML === "X" &&
       enemyFieldArray[currIndex - 1].innerHTML === "X" &&
       enemyFieldArray[currIndex + 2].innerHTML === "X" &&
-      enemyFieldArray[currIndex - 2].style.backgroundColor !== "brown" &&
-      enemyFieldArray[currIndex + 3].style.backgroundColor !== "brown"
+      !enemyFieldArray[currIndex - 2].classList.contains("brown") &&
+      !enemyFieldArray[currIndex + 3].classList.contains("brown")
     ) {
       enemyFieldArray[currIndex].innerHTML = "X";
       enemyFieldArray[currIndex + 10].innerHTML = ".";
@@ -72,12 +74,12 @@ const makeShoot = (e) => {
     } else if (
       // 4 ship attack crush
       //middle 2 target
-      enemyFieldArray[currIndex].style.backgroundColor === "brown" &&
+      enemyFieldArray[currIndex].classList.contains("brown") &&
       enemyFieldArray[currIndex + 1].innerHTML === "X" &&
       enemyFieldArray[currIndex - 1].innerHTML === "X" &&
       enemyFieldArray[currIndex - 2].innerHTML === "X" &&
-      enemyFieldArray[currIndex - 3].style.backgroundColor !== "brown" &&
-      enemyFieldArray[currIndex + 2].style.backgroundColor !== "brown"
+      !enemyFieldArray[currIndex - 3].classList.contains("brown") &&
+      !enemyFieldArray[currIndex + 2].classList.contains("brown")
     ) {
       enemyFieldArray[currIndex].innerHTML = "X";
       enemyFieldArray[currIndex + 10].innerHTML = ".";
@@ -101,12 +103,12 @@ const makeShoot = (e) => {
     } else if (
       // 4 ship attack crush
       //bottom target
-      enemyFieldArray[currIndex].style.backgroundColor === "brown" &&
+      enemyFieldArray[currIndex].classList.contains("brown") &&
       enemyFieldArray[currIndex - 1].innerHTML === "X" &&
       enemyFieldArray[currIndex - 2].innerHTML === "X" &&
       enemyFieldArray[currIndex - 3].innerHTML === "X" &&
-      enemyFieldArray[currIndex + 1].style.backgroundColor !== "brown" &&
-      enemyFieldArray[currIndex - 4].style.backgroundColor !== "brown"
+      !enemyFieldArray[currIndex + 1].classList.contains("brown") &&
+      !enemyFieldArray[currIndex - 4].classList.contains("brown")
     ) {
       enemyFieldArray[currIndex].innerHTML = "X";
       enemyFieldArray[currIndex + 10].innerHTML = ".";
@@ -129,32 +131,32 @@ const makeShoot = (e) => {
       }
     } else if (
       // 4 ship attack
-      (enemyFieldArray[currIndex].style.backgroundColor === "brown" &&
-        enemyFieldArray[currIndex + 1].style.backgroundColor === "brown" &&
-        enemyFieldArray[currIndex + 2].style.backgroundColor === "brown" &&
-        enemyFieldArray[currIndex + 3].style.backgroundColor === "brown") ||
-      (enemyFieldArray[currIndex].style.backgroundColor === "brown" &&
-        enemyFieldArray[currIndex + 1].style.backgroundColor === "brown" &&
-        enemyFieldArray[currIndex + 2].style.backgroundColor === "brown" &&
-        enemyFieldArray[currIndex - 1].style.backgroundColor === "brown") ||
-      (enemyFieldArray[currIndex].style.backgroundColor === "brown" &&
-        enemyFieldArray[currIndex + 1].style.backgroundColor === "brown" &&
-        enemyFieldArray[currIndex - 1].style.backgroundColor === "brown" &&
-        enemyFieldArray[currIndex - 2].style.backgroundColor === "brown") ||
-      (enemyFieldArray[currIndex].style.backgroundColor === "brown" &&
-        enemyFieldArray[currIndex - 1].style.backgroundColor === "brown" &&
-        enemyFieldArray[currIndex - 2].style.backgroundColor === "brown" &&
-        enemyFieldArray[currIndex - 3].style.backgroundColor === "brown")
+      (enemyFieldArray[currIndex].classList.contains("brown") &&
+        enemyFieldArray[currIndex + 1].classList.contains("brown") &&
+        enemyFieldArray[currIndex + 2].classList.contains("brown") &&
+        enemyFieldArray[currIndex + 3].classList.contains("brown")) ||
+      (enemyFieldArray[currIndex].classList.contains("brown") &&
+        enemyFieldArray[currIndex + 1].classList.contains("brown") &&
+        enemyFieldArray[currIndex + 2].classList.contains("brown") &&
+        enemyFieldArray[currIndex - 1].classList.contains("brown")) ||
+      (enemyFieldArray[currIndex].classList.contains("brown") &&
+        enemyFieldArray[currIndex + 1].classList.contains("brown") &&
+        enemyFieldArray[currIndex - 1].classList.contains("brown") &&
+        enemyFieldArray[currIndex - 2].classList.contains("brown")) ||
+      (enemyFieldArray[currIndex].classList.contains("brown") &&
+        enemyFieldArray[currIndex - 1].classList.contains("brown") &&
+        enemyFieldArray[currIndex - 2].classList.contains("brown") &&
+        enemyFieldArray[currIndex - 3].classList.contains("brown"))
     ) {
       enemyFieldArray[currIndex].innerHTML = "X";
     } else if (
       // 3 ship attack crush
       //center target
-      enemyFieldArray[currIndex].style.backgroundColor === "brown" &&
+      enemyFieldArray[currIndex].classList.contains("brown") &&
       enemyFieldArray[currIndex + 1].innerHTML === "X" &&
       enemyFieldArray[currIndex - 1].innerHTML === "X" &&
-      enemyFieldArray[currIndex - 2].style.backgroundColor !== "brown" &&
-      enemyFieldArray[currIndex + 2].style.backgroundColor !== "brown"
+      !enemyFieldArray[currIndex - 2].classList.contains("brown") &&
+      !enemyFieldArray[currIndex + 2].classList.contains("brown")
     ) {
       enemyFieldArray[currIndex].innerHTML = "X";
       enemyFieldArray[currIndex + 10].innerHTML = ".";
@@ -176,11 +178,11 @@ const makeShoot = (e) => {
     } else if (
       // 3 ship attack crush
       //top target
-      enemyFieldArray[currIndex].style.backgroundColor === "brown" &&
+      enemyFieldArray[currIndex].classList.contains("brown") &&
       enemyFieldArray[currIndex + 1].innerHTML === "X" &&
       enemyFieldArray[currIndex + 2].innerHTML === "X" &&
-      enemyFieldArray[currIndex - 1].style.backgroundColor !== "brown" &&
-      enemyFieldArray[currIndex + 3].style.backgroundColor !== "brown"
+      !enemyFieldArray[currIndex - 1].classList.contains("brown") &&
+      !enemyFieldArray[currIndex + 3].classList.contains("brown")
     ) {
       enemyFieldArray[currIndex].innerHTML = "X";
       enemyFieldArray[currIndex + 10].innerHTML = ".";
@@ -202,11 +204,11 @@ const makeShoot = (e) => {
     } else if (
       // 3 ship attack crush
       //bottom target
-      enemyFieldArray[currIndex].style.backgroundColor === "brown" &&
+      enemyFieldArray[currIndex].classList.contains("brown") &&
       enemyFieldArray[currIndex - 1].innerHTML === "X" &&
       enemyFieldArray[currIndex - 2].innerHTML === "X" &&
-      enemyFieldArray[currIndex + 1].style.backgroundColor !== "brown" &&
-      enemyFieldArray[currIndex - 3].style.backgroundColor !== "brown"
+      !enemyFieldArray[currIndex + 1].classList.contains("brown") &&
+      !enemyFieldArray[currIndex - 3].classList.contains("brown")
     ) {
       enemyFieldArray[currIndex].innerHTML = "X";
       enemyFieldArray[currIndex + 10].innerHTML = ".";
@@ -228,26 +230,26 @@ const makeShoot = (e) => {
     } else if (
       // 3 ship attack
 
-      (enemyFieldArray[currIndex].style.backgroundColor === "brown" &&
-        enemyFieldArray[currIndex + 1].style.backgroundColor === "brown" &&
-        enemyFieldArray[currIndex - 1].style.backgroundColor === "brown") ||
-      (enemyFieldArray[currIndex].style.backgroundColor === "brown" &&
-        enemyFieldArray[currIndex + 1].style.backgroundColor === "brown" &&
-        enemyFieldArray[currIndex + 2].style.backgroundColor === "brown" &&
-        enemyFieldArray[currIndex - 1].style.backgroundColor !== "brown") ||
-      (enemyFieldArray[currIndex].style.backgroundColor === "brown" &&
-        enemyFieldArray[currIndex - 1].style.backgroundColor === "brown" &&
-        enemyFieldArray[currIndex - 2].style.backgroundColor === "brown" &&
-        enemyFieldArray[currIndex + 1].style.backgroundColor !== "brown")
+      (enemyFieldArray[currIndex].classList.contains("brown") &&
+        enemyFieldArray[currIndex + 1].classList.contains("brown") &&
+        enemyFieldArray[currIndex - 1].classList.contains("brown")) ||
+      (enemyFieldArray[currIndex].classList.contains("brown") &&
+        enemyFieldArray[currIndex + 1].classList.contains("brown") &&
+        enemyFieldArray[currIndex + 2].classList.contains("brown") &&
+        !enemyFieldArray[currIndex - 1].classList.contains("brown")) ||
+      (enemyFieldArray[currIndex].classList.contains("brown") &&
+        enemyFieldArray[currIndex - 1].classList.contains("brown") &&
+        enemyFieldArray[currIndex - 2].classList.contains("brown") &&
+        !enemyFieldArray[currIndex + 1].classList.contains("brown"))
     ) {
       enemyFieldArray[currIndex].innerHTML = "X";
-    }  else if (
+    } else if (
       // 2 ship attack crush
 
-      enemyFieldArray[currIndex].style.backgroundColor === "brown" &&
-      enemyFieldArray[currIndex + 1].style.backgroundColor !== "brown" &&
+      enemyFieldArray[currIndex].classList.contains("brown") &&
+      enemyFieldArray[currIndex + 1].className !== "brown" &&
       enemyFieldArray[currIndex - 1].innerHTML === "X" &&
-      enemyFieldArray[currIndex - 2].style.backgroundColor !== "brown"
+      !enemyFieldArray[currIndex - 2].classList.contains("brown")
     ) {
       enemyFieldArray[currIndex].innerHTML = "X";
 
@@ -267,10 +269,10 @@ const makeShoot = (e) => {
         enemyFieldArray[currIndex + 11].innerHTML = ".";
       }
     } else if (
-      enemyFieldArray[currIndex].style.backgroundColor === "brown" &&
-      enemyFieldArray[currIndex + 2].style.backgroundColor !== "brown" &&
+      enemyFieldArray[currIndex].classList.contains("brown") &&
+      !enemyFieldArray[currIndex + 2].classList.contains("brown") &&
       enemyFieldArray[currIndex + 1].innerHTML === "X" &&
-      enemyFieldArray[currIndex - 1].style.backgroundColor !== "brown"
+      !enemyFieldArray[currIndex - 1].classList.contains("brown")
     ) {
       enemyFieldArray[currIndex].innerHTML = "X";
       enemyFieldArray[currIndex + 10].innerHTML = ".";
@@ -290,28 +292,28 @@ const makeShoot = (e) => {
       }
     } else if (
       // 2 ship attack
-      (enemyFieldArray[currIndex].style.backgroundColor === "brown" &&
-        enemyFieldArray[currIndex + 1].style.backgroundColor !== "brown" &&
-        enemyFieldArray[currIndex - 1].style.backgroundColor === "brown") ||
-      (enemyFieldArray[currIndex].style.backgroundColor === "brown" &&
-        enemyFieldArray[currIndex + 1].style.backgroundColor === "brown" &&
-        enemyFieldArray[currIndex - 1].style.backgroundColor !== "brown")
+      (enemyFieldArray[currIndex].classList.contains("brown") &&
+        enemyFieldArray[currIndex + 1].className !== "brown" &&
+        enemyFieldArray[currIndex - 1].classList.contains("brown")) ||
+      (enemyFieldArray[currIndex].classList.contains("brown") &&
+        enemyFieldArray[currIndex + 1].classList.contains("brown") &&
+        enemyFieldArray[currIndex - 1].className !== "brown")
     ) {
       enemyFieldArray[currIndex].innerHTML = "X";
     } else if (
-        enemyFieldArray[currIndex].style.backgroundColor === "brown" &&
-        enemyFieldArray[currIndex + 1].style.backgroundColor !== "brown" &&
-        enemyFieldArray[currIndex - 1].style.backgroundColor !== "brown"
-      ) {
-        // 1 ship
-        
-        enemyFieldArray[currIndex - 1].innerHTML = ".";
-        enemyFieldArray[currIndex].innerHTML = "X";
-        enemyFieldArray[currIndex + 1].innerHTML = ".";
-        enemyFieldArray[currIndex + 10].innerHTML = ".";
-        enemyFieldArray[currIndex + 9].innerHTML = ".";
-        enemyFieldArray[currIndex + 11].innerHTML = ".";
-      } else {
+      enemyFieldArray[currIndex].classList.contains("brown") &&
+      enemyFieldArray[currIndex + 1].className !== "brown" &&
+      enemyFieldArray[currIndex - 1].className !== "brown"
+    ) {
+      // 1 ship
+
+      enemyFieldArray[currIndex - 1].innerHTML = ".";
+      enemyFieldArray[currIndex].innerHTML = "X";
+      enemyFieldArray[currIndex + 1].innerHTML = ".";
+      enemyFieldArray[currIndex + 10].innerHTML = ".";
+      enemyFieldArray[currIndex + 9].innerHTML = ".";
+      enemyFieldArray[currIndex + 11].innerHTML = ".";
+    } else {
       target.innerHTML = ".";
     }
   }
@@ -322,10 +324,10 @@ let random = Math.round(Math.random() * 100);
 console.log(random);
 const arrangmentShip = (item, index) => {
   if ((index === 0) | (index === 3) | (index === 5) | (index === 7)) {
-    item.style.className = "brown";
+    item.classList.add("brown");
   }
   if ((index === 20) | (index === 21) | (index == 28) | (index === 29)) {
-    item.style.className = "brown";
+    item.classList.add("brown");
   }
   if (
     (index === 40) |
@@ -335,10 +337,10 @@ const arrangmentShip = (item, index) => {
     (index === 47) |
     (index === 48)
   ) {
-    item.style.className = "brown";
+    item.classList.add("brown");
   }
   if ((index === 60) | (index === 61) | (index == 62) | (index === 63)) {
-    item.style.className = "brown";
+    item.classList.add("brown");
   }
 };
 const checkKilledShip = (item) => {

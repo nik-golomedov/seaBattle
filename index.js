@@ -1,21 +1,8 @@
 const battlePlayer = document.querySelector(".container-player");
-
-const generateField = () => {
-  for (let i = 0; i < 100; i++) {
-    let div = document.createElement("div");
-    div.classList.add("sea-battle__cell-special");
-    battlePlayer.append(div);
-  }
-};
-let battlefieldPlayer = [];
-for (let i = 0; i < 100; i++) {
-  battlefieldPlayer.push({ status: "free", ship: "" });
-}
-
-const battlefieldEnemy = [...battlefieldPlayer];
-
-let newArr = [...battlefieldPlayer];
-const ship = {
+const battleEnemy = document.querySelector(".container-enemy");
+const randomArrangeBtn = document.querySelector(".btnRandom");
+const start = document.querySelector(".btnStart");
+const shipsPlayer = {
   oneShip1: false,
   oneShip2: false,
   oneShip3: false,
@@ -27,8 +14,45 @@ const ship = {
   threeShip1: false,
   fourShip: false,
 };
+const shipsEnemy = {
+  oneShip1: false,
+  oneShip2: false,
+  oneShip3: false,
+  oneShip4: false,
+  twoShip1: false,
+  twoShip2: false,
+  twoShip3: false,
+  threeShip1: false,
+  threeShip1: false,
+  fourShip: false,
+};
+const generatePlayerField = () => {
+  for (let i = 0; i < 100; i++) {
+    let div = document.createElement("div");
+    div.classList.add("sea-battle__cell-player");
+    battlePlayer.append(div);
+  }
+};
+const generateEnemyField = () => {
+  for (let i = 0; i < 100; i++) {
+    let div = document.createElement("div");
+    div.classList.add("sea-battle__cell-enemy");
+    battleEnemy.append(div);
+  }
+};
+generatePlayerField();
+let battlefieldPlayer = [];
+for (let i = 0; i < 100; i++) {
+  battlefieldPlayer.push({ status: "free", ship: "" });
+}
+const playerField = document.getElementsByClassName("sea-battle__cell-player");
+const playerFieldArray = Array.from(playerField);
+
+generateEnemyField();
+let battlefieldEnemy = [...battlefieldPlayer];
+
 // Random generator
-const randomArrange = (arr) => {
+const randomArrange = (arr, ship) => {
   let randomNumberFour = String(Math.trunc(Math.random() * 100));
 
   randomNumberFour =
@@ -65,13 +89,10 @@ const randomArrange = (arr) => {
   randomNumberOne4 =
     randomNumberOne4.length === 1 ? "0" + randomNumberOne4 : randomNumberOne4;
   let randomDirection = Math.round(Math.random());
-  console.log(`4 : ${randomNumberFour}`);
-  console.log(`31 : ${randomNumberThree1}`);
-  console.log(`32 : ${randomNumberThree2}`);
-  console.log(`21 : ${randomNumberTwo1}`);
   let direction = randomDirection === 1 ? "horizontal" : "vertical";
   // create four
   if (!ship.fourShip) {
+    debugger;
     if (direction === "horizontal") {
       if (
         randomNumberFour.slice(1) === "6" ||
@@ -138,11 +159,11 @@ const randomArrange = (arr) => {
   }
   // create three1
   if (!ship.threeShip1) {
-    createThreeShip(direction,arr,randomNumberThree1)
+    createThreeShip(direction, arr, randomNumberThree1);
     ship.threeShip1 = true;
   }
   if (!ship.threeShip2) {
-    createThreeShip(direction,arr,randomNumberThree2)
+    createThreeShip(direction, arr, randomNumberThree2);
     ship.threeShip2 = true;
   }
 
@@ -378,7 +399,7 @@ const createTwoShips = (direction, arr, number) => {
     }
   }
 };
-const createThreeShip = (direction,arr,number) => {
+const createThreeShip = (direction, arr, number) => {
   if (direction === "horizontal") {
     if (
       number.slice(1) === "7" ||
@@ -415,9 +436,7 @@ const createThreeShip = (direction,arr,number) => {
             arr[i + 11]?.status === "free" || arr[i + 11]?.status === "freeze"
               ? (arr[i + 11].status = "freeze")
               : "";
-            arr[i - 9]?.status === "free"
-              ? (arr[i - 9].status = "freeze")
-              : "";
+            arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
           }
         }
       } else {
@@ -431,28 +450,18 @@ const createThreeShip = (direction,arr,number) => {
       ) {
         for (let i = +number; i < +number + 3; i++) {
           arr[i].status = "part3Ship";
-          arr[i + 10]?.status === "free"
-            ? (arr[i + 10].status = "freeze")
-            : "";
-          arr[i - 10]?.status === "free"
-            ? (arr[i - 10].status = "freeze")
-            : "";
+          arr[i + 10]?.status === "free" ? (arr[i + 10].status = "freeze") : "";
+          arr[i - 10]?.status === "free" ? (arr[i - 10].status = "freeze") : "";
           arr[i + 1]?.status === "free" ? (arr[i + 1].status = "freeze") : "";
-          arr[i + 11]?.status === "free"
-            ? (arr[i + 11].status = "freeze")
-            : "";
+          arr[i + 11]?.status === "free" ? (arr[i + 11].status = "freeze") : "";
           arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
 
           if (number.slice(1) !== "0") {
             arr[i - 11]?.status === "free"
               ? (arr[i - 11].status = "freeze")
               : "";
-            arr[i - 1]?.status === "free"
-              ? (arr[i - 1].status = "freeze")
-              : "";
-            arr[i + 9]?.status === "free"
-              ? (arr[i + 9].status = "freeze")
-              : "";
+            arr[i - 1]?.status === "free" ? (arr[i - 1].status = "freeze") : "";
+            arr[i + 9]?.status === "free" ? (arr[i + 9].status = "freeze") : "";
           }
         }
       } else {
@@ -462,10 +471,7 @@ const createThreeShip = (direction,arr,number) => {
   }
 
   if (direction === "vertical") {
-    if (
-      number.slice(0, 1) === "8" ||
-      number.slice(0, 1) === "9"
-    ) {
+    if (number.slice(0, 1) === "8" || number.slice(0, 1) === "9") {
       if (
         arr[+number].status === "free" &&
         arr[+number - 10].status === "free" &&
@@ -495,17 +501,16 @@ const createThreeShip = (direction,arr,number) => {
       }
     }
   }
-}
-generateField();
-let playerField = document.getElementsByClassName("sea-battle__cell-special");
-let playerFieldArray = Array.from(playerField);
-
-randomArrange(newArr);
+};
 let j = 0;
 
-playerFieldArray.map((item) => {
-  item.classList.add(newArr[j++].status);
-});
+const arrange = (arr, ship) => () => {
+  randomArrange(arr, ship);
+  playerFieldArray.map((item) => item.classList.add(arr[j++].status));
+  console.log(newArr);
+};
+randomArrangeBtn.addEventListener("click", arrange(battlefieldPlayer, shipsPlayer));
+start.addEventListener("click", arrange(battlefieldEnemy, shipsEnemy));
 
 const fireEnemy = (arrDiv, arrNum) => {
   let random = Math.round(Math.random() * 100);

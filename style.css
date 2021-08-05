@@ -2,6 +2,11 @@
   margin: 0;
   padding: 0;
 }
+.battlefield__container {
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+}
 .sea-battle__container-player,
 .sea-battle__container-enemy {
   display: flex;
@@ -51,12 +56,12 @@
 .brown {
   background-color: grey;
 }
-.sea-battle__cell-special {
+.sea-battle__cell-player,.sea-battle__cell-enemy {
   width: 9%;
   height: 9%;
   border: 1px solid black;
 }
-.container-player {
+.container-player,.container-enemy {
   display: flex;
   width: 600px;
   height: 600px;

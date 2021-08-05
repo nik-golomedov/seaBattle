@@ -536,21 +536,53 @@ const firePlayer = (e) => {
   const target = e.target;
   let currentIndexField = enemyFieldArray.indexOf(target);
   let currentIndexArr = currentIndexField;
-  console.log(target);
+
   if (
-    battlefieldPlayer[currentIndexArr].status === "miss" ||
-    battlefieldPlayer[currentIndexArr].status === "hit"
-  ) {
-  } else if (
     battlefieldEnemy[currentIndexField].status === "freeze" ||
     battlefieldEnemy[currentIndexField].status === "free"
   ) {
-    enemyFieldArray[currentIndexArr].classList.add("miss");
     battlefieldEnemy[currentIndexArr].status = "miss";
   } else if (battlefieldEnemy[currentIndexArr].status === "oneShip") {
-    enemyFieldArray[currentIndexArr].classList.add("crush");
     battlefieldEnemy[currentIndexArr].status = "crush";
+  } else if (battlefieldEnemy[currentIndexArr].status === "part2Ship") {
+    if (
+      battlefieldEnemy[currentIndexArr].status === "part2Ship" &&
+      (battlefieldEnemy[currentIndexArr + 1]?.status === "hit" ||
+        battlefieldEnemy[currentIndexArr - 1]?.status === "hit" ||
+        battlefieldEnemy[currentIndexArr + 10]?.status === "hit" ||
+        battlefieldEnemy[currentIndexArr - 10]?.status === "hit")
+    ) {
+      battlefieldEnemy[currentIndexArr].status = "crush";
+      battlefieldEnemy[currentIndexArr + 1]?.status === "hit"
+        ? (battlefieldEnemy[currentIndexArr + 1].status = "crush")
+        : "";
+      battlefieldEnemy[currentIndexArr - 1]?.status === "hit"
+        ? (battlefieldEnemy[currentIndexArr - 1].status = "crush")
+        : "";
+      battlefieldEnemy[currentIndexArr + 10]?.status === "hit"
+        ? (battlefieldEnemy[currentIndexArr + 10].status = "crush")
+        : "";
+      battlefieldEnemy[currentIndexArr - 10]?.status === "hit"
+        ? (battlefieldEnemy[currentIndexArr - 10].status = "crush")
+        : "";
+    } else if (
+      battlefieldEnemy[currentIndexArr].status === "part2Ship" &&
+      (battlefieldEnemy[currentIndexArr + 1]?.status === "part2Ship" ||
+        battlefieldEnemy[currentIndexArr - 1]?.status === "part2Ship" ||
+        battlefieldEnemy[currentIndexArr + 10]?.status === "part2Ship" ||
+        battlefieldEnemy[currentIndexArr - 10]?.status === "part2Ship")
+    ) {
+      battlefieldEnemy[currentIndexArr].status = "hit";
+    }
   }
+  battlefieldEnemy.forEach((item, index) => {
+    item.status === "miss" ? enemyFieldArray[index].classList.add("miss") : "";
+    if (item.status === "crush") {
+      blockAttack(battlefieldEnemy, index);
+      enemyFieldArray[index].classList.add("crush");
+    }
+    item.status === "hit" ? enemyFieldArray[index].classList.add("hit") : "";
+  });
 };
 battleEnemy.addEventListener("click", firePlayer);
 
@@ -578,10 +610,80 @@ const fireEnemy = () => {
   }
 };
 start.addEventListener("click", fireEnemy);
-document.addEventListener("click",handleClick, true );
+document.addEventListener("click", handleClick, true);
 function handleClick(e) {
-  if (e.target.classList.contains('miss')||e.target.classList.contains('crush')||e.target.classList.contains('hit')) {
+  if (
+    e.target.classList.contains("miss") ||
+    e.target.classList.contains("crush") ||
+    e.target.classList.contains("hit")
+  ) {
     e.stopPropagation();
     e.preventDefault();
   }
-} 
+}
+
+const blockAttack = (arr, index) => {
+  index = String(index).length === 1 ? "0" + String(index) : index;
+
+  if (String(index).slice(1) === "9") {
+    index = +index;
+    arr[index - 1] && arr[index + 9].status !== "hit"
+      ? (arr[index - 1].status = "miss")
+      : "";
+    arr[index - 11] && arr[index - 11].status !== "hit"
+      ? (arr[index - 11].status = "miss")
+      : "";
+    arr[index + 9] && arr[index + 9].status !== "hit"
+      ? (arr[index + 9].status = "miss")
+      : "";
+    arr[index + 10] && arr[index + 10].status !== "hit"
+      ? (arr[index + 10].status = "miss")
+      : "";
+    arr[index - 10] && arr[index - 10].status !== "hit"
+      ? (arr[index - 10].status = "miss")
+      : "";
+  } else if (String(index).slice(1) === "0") {
+    index = +index;
+    arr[index + 10] && arr[index + 10].status !== "hit"
+      ? (arr[index + 10].status = "miss")
+      : "";
+    arr[index + 1] && arr[index + 1].status !== "hit"
+      ? (arr[index + 1].status = "miss")
+      : "";
+    arr[index - 10] && arr[index - 10].status !== "hit"
+      ? (arr[index - 10].status = "miss")
+      : "";
+    arr[index + 11] && arr[index + 11].status !== "hit"
+      ? (arr[index + 11].status = "miss")
+      : "";
+    arr[index - 9] && arr[index - 9].status !== "hit"
+      ? (arr[index - 9].status = "miss")
+      : "";
+  } else {
+    index = +index;
+    arr[index - 1] && arr[index - 11].status !== "hit"
+      ? (arr[index - 1].status = "miss")
+      : "";
+    arr[index - 11] && arr[index - 11].status !== "hit"
+      ? (arr[index - 11].status = "miss")
+      : "";
+    arr[index + 9] && arr[index + 9].status !== "hit"
+      ? (arr[index + 9].status = "miss")
+      : "";
+    arr[index + 10] && arr[index + 10].status !== "hit"
+      ? (arr[index + 10].status = "miss")
+      : "";
+    arr[index - 10] && arr[index - 10].status !== "hit"
+      ? (arr[index - 10].status = "miss")
+      : "";
+    arr[index - 9] && arr[index - 9].status !== "hit"
+      ? (arr[index - 9].status = "miss")
+      : "";
+    arr[index + 1] && arr[index + 1].status !== "hit"
+      ? (arr[index + 1].status = "miss")
+      : "";
+    arr[index + 11] && arr[index + 11].status !== "hit"
+      ? (arr[index + 11].status = "miss")
+      : "";
+  }
+};

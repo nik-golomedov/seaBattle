@@ -56,12 +56,15 @@
 .brown {
   background-color: grey;
 }
-.sea-battle__cell-player,.sea-battle__cell-enemy {
+.sea-battle__cell-player,
+.sea-battle__cell-enemy {
   width: 9%;
   height: 9%;
   border: 1px solid black;
+  text-align: center;
 }
-.container-player,.container-enemy {
+.container-player,
+.container-enemy {
   display: flex;
   width: 600px;
   height: 600px;
@@ -71,7 +74,7 @@
   background-color: blue;
 }
 .part2Ship {
-  background-color: red;
+  background-color: rgb(17, 105, 76);
 }
 .part3Ship {
   background-color: greenyellow;
@@ -80,5 +83,17 @@
   background-color: hotpink;
 }
 .freeze {
-  background: grey;
+  background: rgb(255, 255, 255);
 }
+.hit {
+  background: rgb(255, 0, 0);
+}
+.crush {
+  background: black;
+}
+.miss {
+  background: rgb(148, 148, 148);
+}
+/* .sea-battle__cell-enemy:nth-child(n) {
+  background: white;
+} */

@@ -2,6 +2,7 @@ const battlePlayer = document.querySelector(".container-player");
 const battleEnemy = document.querySelector(".container-enemy");
 const randomArrangeBtn = document.querySelector(".btnRandom");
 const start = document.querySelector(".btnStart");
+const enemyButton = document.querySelector(".btnEnemy");
 const shipsPlayer = {
   oneShip1: false,
   oneShip2: false,
@@ -26,6 +27,7 @@ const shipsEnemy = {
   threeShip1: false,
   fourShip: false,
 };
+
 const generatePlayerField = () => {
   for (let i = 0; i < 100; i++) {
     let div = document.createElement("div");
@@ -45,16 +47,22 @@ let battlefieldPlayer = [];
 for (let i = 0; i < 100; i++) {
   battlefieldPlayer.push({ status: "free", ship: "" });
 }
+console.log(battlefieldPlayer);
+generateEnemyField();
 const playerField = document.getElementsByClassName("sea-battle__cell-player");
 const playerFieldArray = Array.from(playerField);
+const enemyField = document.getElementsByClassName("sea-battle__cell-enemy");
+const enemyFieldArray = Array.from(enemyField);
 
-generateEnemyField();
-let battlefieldEnemy = [...battlefieldPlayer];
+let battlefieldEnemy = [];
+for (let i = 0; i < 100; i++) {
+  battlefieldEnemy.push({ status: "free", ship: "" });
+}
 
 // Random generator
 const randomArrange = (arr, ship) => {
   let randomNumberFour = String(Math.trunc(Math.random() * 100));
-
+  console.log("gf");
   randomNumberFour =
     randomNumberFour.length === 1 ? "0" + randomNumberFour : randomNumberFour;
   let randomNumberThree1 = String(Math.trunc(Math.random() * 100));
@@ -92,7 +100,6 @@ const randomArrange = (arr, ship) => {
   let direction = randomDirection === 1 ? "horizontal" : "vertical";
   // create four
   if (!ship.fourShip) {
-    debugger;
     if (direction === "horizontal") {
       if (
         randomNumberFour.slice(1) === "6" ||
@@ -159,40 +166,40 @@ const randomArrange = (arr, ship) => {
   }
   // create three1
   if (!ship.threeShip1) {
-    createThreeShip(direction, arr, randomNumberThree1);
+    createThreeShip(direction, arr, randomNumberThree1, ship);
     ship.threeShip1 = true;
   }
   if (!ship.threeShip2) {
-    createThreeShip(direction, arr, randomNumberThree2);
+    createThreeShip(direction, arr, randomNumberThree2, ship);
     ship.threeShip2 = true;
   }
 
   if (!ship.twoShip1) {
-    createTwoShips(direction, arr, randomNumberTwo1);
+    createTwoShips(direction, arr, randomNumberTwo1, ship);
     ship.twoShip1 = true;
   }
   if (!ship.twoShip2) {
-    createTwoShips(direction, arr, randomNumberTwo2);
+    createTwoShips(direction, arr, randomNumberTwo2, ship);
     ship.twoShip2 = true;
   }
   if (!ship.twoShip3) {
-    createTwoShips(direction, arr, randomNumberTwo3);
+    createTwoShips(direction, arr, randomNumberTwo3, ship);
     ship.twoShip3 = true;
   }
   if (!ship.oneShip1) {
-    createOneShip(direction, arr, randomNumberOne1);
+    createOneShip(direction, arr, randomNumberOne1, ship);
     ship.oneShip1 = true;
   }
   if (!ship.oneShip2) {
-    createOneShip(direction, arr, randomNumberOne2);
+    createOneShip(direction, arr, randomNumberOne2, ship);
     ship.oneShip2 = true;
   }
   if (!ship.oneShip3) {
-    createOneShip(direction, arr, randomNumberOne3);
+    createOneShip(direction, arr, randomNumberOne3, ship);
     ship.oneShip3 = true;
   }
   if (!ship.oneShip4) {
-    createOneShip(direction, arr, randomNumberOne4);
+    createOneShip(direction, arr, randomNumberOne4, ship);
     ship.oneShip4 = true;
   }
 };
@@ -221,7 +228,7 @@ const checkFourShip = (arr, i, number) => {
     arr[i + 10]?.status === "free" ? (arr[i + 10].status = "freeze") : "";
   }
 };
-const createOneShip = (direction, arr, number) => {
+const createOneShip = (direction, arr, number, ship) => {
   if (direction === "horizontal") {
     if (number.slice(1) === "9") {
       if (arr[+number].status === "free") {
@@ -254,7 +261,7 @@ const createOneShip = (direction, arr, number) => {
           }
         }
       } else {
-        randomArrange(arr);
+        randomArrange(arr, ship);
       }
     } else {
       if (arr[+number].status === "free") {
@@ -275,7 +282,7 @@ const createOneShip = (direction, arr, number) => {
           }
         }
       } else {
-        randomArrange(arr);
+        randomArrange(arr, ship);
       }
     }
   }
@@ -289,7 +296,7 @@ const createOneShip = (direction, arr, number) => {
           checkFourShip(arr, i, number);
         }
       } else {
-        randomArrange(arr);
+        randomArrange(arr, ship);
       }
     } else {
       if (arr[+number].status === "free") {
@@ -299,12 +306,12 @@ const createOneShip = (direction, arr, number) => {
           checkFourShip(arr, i, number);
         }
       } else {
-        randomArrange(arr);
+        randomArrange(arr, ship);
       }
     }
   }
 };
-const createTwoShips = (direction, arr, number) => {
+const createTwoShips = (direction, arr, number, ship) => {
   if (direction === "horizontal") {
     if (number.slice(1) === "8" || number.slice(1) === "9") {
       if (
@@ -340,7 +347,7 @@ const createTwoShips = (direction, arr, number) => {
           }
         }
       } else {
-        randomArrange(arr);
+        randomArrange(arr, ship);
       }
     } else {
       if (
@@ -364,7 +371,7 @@ const createTwoShips = (direction, arr, number) => {
           }
         }
       } else {
-        randomArrange(arr);
+        randomArrange(arr, ship);
       }
     }
   }
@@ -381,7 +388,7 @@ const createTwoShips = (direction, arr, number) => {
           checkFourShip(arr, i, number);
         }
       } else {
-        randomArrange(arr);
+        randomArrange(arr, ship);
       }
     } else {
       if (
@@ -394,12 +401,12 @@ const createTwoShips = (direction, arr, number) => {
           checkFourShip(arr, i, number);
         }
       } else {
-        randomArrange(arr);
+        randomArrange(arr, ship);
       }
     }
   }
 };
-const createThreeShip = (direction, arr, number) => {
+const createThreeShip = (direction, arr, number, ship) => {
   if (direction === "horizontal") {
     if (
       number.slice(1) === "7" ||
@@ -440,7 +447,7 @@ const createThreeShip = (direction, arr, number) => {
           }
         }
       } else {
-        randomArrange(arr);
+        randomArrange(arr, ship);
       }
     } else {
       if (
@@ -465,7 +472,7 @@ const createThreeShip = (direction, arr, number) => {
           }
         }
       } else {
-        randomArrange(arr);
+        randomArrange(arr, ship);
       }
     }
   }
@@ -483,7 +490,7 @@ const createThreeShip = (direction, arr, number) => {
           checkFourShip(arr, i, number);
         }
       } else {
-        randomArrange(arr);
+        randomArrange(arr, ship);
       }
     } else {
       if (
@@ -497,54 +504,84 @@ const createThreeShip = (direction, arr, number) => {
           checkFourShip(arr, i, number);
         }
       } else {
-        randomArrange(arr);
+        randomArrange(arr, ship);
       }
     }
   }
 };
-let j = 0;
 
-const arrange = (arr, ship) => () => {
+const arrange = (arr, arrBattle, ship) => () => {
+  let j = 0;
   randomArrange(arr, ship);
-  playerFieldArray.map((item) => item.classList.add(arr[j++].status));
-  console.log(newArr);
-};
-randomArrangeBtn.addEventListener("click", arrange(battlefieldPlayer, shipsPlayer));
-start.addEventListener("click", arrange(battlefieldEnemy, shipsEnemy));
 
-const fireEnemy = (arrDiv, arrNum) => {
-  let random = Math.round(Math.random() * 100);
-  // const target = e.target;
-  // const currentIndexField = arrDiv.indexOf(target)
-  // const currentIndexArr = currentIndexField
-  arrDiv[random].click();
-  if (arrNum[random].status === "hit") {
+  arrBattle.map((item) => {
+    item.classList.add(arr[j++].status);
+  });
+};
+const arrangeEnemy = (arr, arrBattle, ship) => () => {
+  let y = 0;
+  randomArrange(arr, ship);
+  arrBattle.map((item) => item.classList.add(arr[y++].status));
+};
+enemyButton.addEventListener(
+  "click",
+  arrange(battlefieldEnemy, enemyFieldArray, shipsEnemy)
+);
+console.log(enemyFieldArray);
+randomArrangeBtn.addEventListener(
+  "click",
+  arrange(battlefieldPlayer, playerFieldArray, shipsPlayer)
+);
+const firePlayer = (e) => {
+  const target = e.target;
+  let currentIndexField = enemyFieldArray.indexOf(target);
+  let currentIndexArr = currentIndexField;
+  console.log(target);
+  if (
+    battlefieldPlayer[currentIndexArr].status === "miss" ||
+    battlefieldPlayer[currentIndexArr].status === "hit"
+  ) {
+  } else if (
+    battlefieldEnemy[currentIndexField].status === "freeze" ||
+    battlefieldEnemy[currentIndexField].status === "free"
+  ) {
+    enemyFieldArray[currentIndexArr].classList.add("miss");
+    battlefieldEnemy[currentIndexArr].status = "miss";
+  } else if (battlefieldEnemy[currentIndexArr].status === "oneShip") {
+    enemyFieldArray[currentIndexArr].classList.add("crush");
+    battlefieldEnemy[currentIndexArr].status = "crush";
+  }
+};
+battleEnemy.addEventListener("click", firePlayer);
+
+const fireEnemy = () => {
+  let random = Math.trunc(Math.random() * 100);
+  playerFieldArray[random].click();
+  if (
+    battlefieldPlayer[random].status === "miss" ||
+    battlefieldPlayer[random].status === "hit"
+  ) {
+    fireEnemy();
+  } else if (
+    battlefieldPlayer[random].status === "freeze" ||
+    battlefieldPlayer[random].status === "free"
+  ) {
+    playerFieldArray[random].classList.add("miss");
+    battlefieldPlayer[random].status = "miss";
+  } else if (battlefieldPlayer[random].status === "oneShip") {
+    playerFieldArray[random].classList.add("crush");
+    battlefieldPlayer[random].status = "crush";
+    fireEnemy();
+  } else {
+    playerFieldArray[random].classList.add("hit");
     fireEnemy();
   }
-  if (arrNum[random].status === "free") {
-    arrDiv[random].innerHTML = ".";
-  }
-  if (arrNum[random].status === "ship") {
-    if (arrNum.ship === "1-deck") {
-      arrNum[random].status = "destroyed";
-    }
-    if (arrNum.ship === "2-deck") {
-      if (
-        arrNum[random + 1].status === "hit" ||
-        arrNum[random - 1].status === "hit" ||
-        arrNum[random + 10].status === "hit" ||
-        arrNum[random - 10].status === "hit"
-      ) {
-        arrNum[random].status = "destroyed";
-        fireEnemy();
-      }
-      arrNum[random].status = "hit";
-      fireEnemy();
-    }
-  }
 };
-//three
-
-//two
-
-// one
+start.addEventListener("click", fireEnemy);
+document.addEventListener("click",handleClick, true );
+function handleClick(e) {
+  if (e.target.classList.contains('miss')||e.target.classList.contains('crush')||e.target.classList.contains('hit')) {
+    e.stopPropagation();
+    e.preventDefault();
+  }
+} 

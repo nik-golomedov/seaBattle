@@ -2,18 +2,19 @@
   margin: 0;
   padding: 0;
 }
-.sea-battle__container-my,
+.sea-battle__container-player,
 .sea-battle__container-enemy {
   display: flex;
+  flex-flow: row;
   justify-content: center;
   align-items: center;
 }
 .sea-battle__container-my {
   margin-right: 30px;
 }
-.sea-battle__cell-my,
+.player,
 .sea-battle__cell-number,
-.sea-battle__cell-enemy {
+.enemy {
   width: 30px;
   height: 30px;
   border: 1px solid black;
@@ -22,8 +23,8 @@
 .sea-battle__col {
   text-align: center;
 }
-.sea-battle__col-header .sea-battle__cell-my,
- .sea-battle__cell-number {
+.sea-battle__col-header .player,
+.sea-battle__cell-number {
   border: none;
   text-align: center;
   line-height: 60px;
@@ -46,4 +47,33 @@
   color: aliceblue;
   font-size: 18px;
   margin-left: 50px;
+}
+.brown {
+  background-color: grey;
+}
+.sea-battle__cell-special {
+  width: 9%;
+  height: 9%;
+  border: 1px solid black;
+}
+.container-player {
+  display: flex;
+  width: 600px;
+  height: 600px;
+  flex-flow: row wrap;
+}
+.oneShip {
+  background-color: blue;
+}
+.part2Ship {
+  background-color: red;
+}
+.part3Ship {
+  background-color: greenyellow;
+}
+.part4Ship {
+  background-color: hotpink;
+}
+.freeze {
+  background: grey;
 }

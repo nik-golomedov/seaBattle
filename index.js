@@ -1,373 +1,545 @@
-const battleEnemy = document.querySelector(".sea-battle__container-my");
-const start = document.querySelector(".sea-battle__btn");
-const cell = document.querySelector(".sea-battle__cell");
-let myField = document.getElementsByClassName("sea-battle__cell-my");
-let enemyField = document.getElementsByClassName("sea-battle__cell-enemy");
-let myFieldArray = Array.from(myField);
-let enemyFieldArray = Array.from(enemyField);
-const makeShoot = (e) => {
-  const target = e.target;
-  currIndex = enemyFieldArray.indexOf(target);
-  console.log(enemyFieldArray[currIndex].classList.contains("brown"));
-  console.log(target.innerHTML);
-  if (target.classList.contains("sea-battle__cell-enemy")) {
-    if (target.innerHTML === ".") {
-      return;
-    } else if (
-      // 4 ship attack crush
-      //top target
-      enemyFieldArray[currIndex].classList.contains("brown") &&
-      enemyFieldArray[currIndex + 1].innerHTML === "X" &&
-      enemyFieldArray[currIndex + 2].innerHTML === "X" &&
-      enemyFieldArray[currIndex + 3].innerHTML === "X" &&
-      !enemyFieldArray[currIndex + 4].classList.contains("brown") &&
-      !enemyFieldArray[currIndex - 1].classList.contains("brown")
-    ) {
-      enemyFieldArray[currIndex].innerHTML = "X";
-      enemyFieldArray[currIndex + 10].innerHTML = ".";
-      enemyFieldArray[currIndex - 10].innerHTML = ".";
-      enemyFieldArray[currIndex + 11].innerHTML = ".";
-      enemyFieldArray[currIndex - 9].innerHTML = ".";
-      enemyFieldArray[currIndex + 12].innerHTML = ".";
-      enemyFieldArray[currIndex - 8].innerHTML = ".";
-      enemyFieldArray[currIndex + 13].innerHTML = ".";
-      enemyFieldArray[currIndex - 7].innerHTML = ".";
-      if (currIndex % 10 !== 0) {
-        enemyFieldArray[currIndex - 1].innerHTML = ".";
-        enemyFieldArray[currIndex + 9].innerHTML = ".";
-        enemyFieldArray[currIndex - 11].innerHTML = ".";
-      }
-      if ((currIndex + 4) % 10 !== 0) {
-        enemyFieldArray[currIndex + 4].innerHTML = ".";
-        enemyFieldArray[currIndex + 14].innerHTML = ".";
-        enemyFieldArray[currIndex - 6].innerHTML = ".";
-      }
-    } else if (
-      // 4 ship attack crush
-      //middel 1 target
-      enemyFieldArray[currIndex].classList.contains("brown") &&
-      enemyFieldArray[currIndex + 1].innerHTML === "X" &&
-      enemyFieldArray[currIndex - 1].innerHTML === "X" &&
-      enemyFieldArray[currIndex + 2].innerHTML === "X" &&
-      !enemyFieldArray[currIndex - 2].classList.contains("brown") &&
-      !enemyFieldArray[currIndex + 3].classList.contains("brown")
-    ) {
-      enemyFieldArray[currIndex].innerHTML = "X";
-      enemyFieldArray[currIndex + 10].innerHTML = ".";
-      enemyFieldArray[currIndex - 10].innerHTML = ".";
-      enemyFieldArray[currIndex + 11].innerHTML = ".";
-      enemyFieldArray[currIndex - 9].innerHTML = ".";
-      enemyFieldArray[currIndex + 9].innerHTML = ".";
-      enemyFieldArray[currIndex - 11].innerHTML = ".";
-      enemyFieldArray[currIndex + 12].innerHTML = ".";
-      enemyFieldArray[currIndex - 8].innerHTML = ".";
-      if ((currIndex - 1) % 10 !== 0) {
-        enemyFieldArray[currIndex - 2].innerHTML = ".";
-        enemyFieldArray[currIndex + 8].innerHTML = ".";
-        enemyFieldArray[currIndex - 12].innerHTML = ".";
-      }
-      if ((currIndex + 3) % 10 !== 0) {
-        enemyFieldArray[currIndex + 3].innerHTML = ".";
-        enemyFieldArray[currIndex - 7].innerHTML = ".";
-        enemyFieldArray[currIndex + 13].innerHTML = ".";
-      }
-    } else if (
-      // 4 ship attack crush
-      //middle 2 target
-      enemyFieldArray[currIndex].classList.contains("brown") &&
-      enemyFieldArray[currIndex + 1].innerHTML === "X" &&
-      enemyFieldArray[currIndex - 1].innerHTML === "X" &&
-      enemyFieldArray[currIndex - 2].innerHTML === "X" &&
-      !enemyFieldArray[currIndex - 3].classList.contains("brown") &&
-      !enemyFieldArray[currIndex + 2].classList.contains("brown")
-    ) {
-      enemyFieldArray[currIndex].innerHTML = "X";
-      enemyFieldArray[currIndex + 10].innerHTML = ".";
-      enemyFieldArray[currIndex - 10].innerHTML = ".";
-      enemyFieldArray[currIndex + 11].innerHTML = ".";
-      enemyFieldArray[currIndex - 9].innerHTML = ".";
-      enemyFieldArray[currIndex + 9].innerHTML = ".";
-      enemyFieldArray[currIndex - 11].innerHTML = ".";
-      enemyFieldArray[currIndex + 8].innerHTML = ".";
-      enemyFieldArray[currIndex - 12].innerHTML = ".";
-      if ((currIndex - 2) % 10 !== 0) {
-        enemyFieldArray[currIndex - 3].innerHTML = ".";
-        enemyFieldArray[currIndex + 7].innerHTML = ".";
-        enemyFieldArray[currIndex - 13].innerHTML = ".";
-      }
-      if ((currIndex + 2) % 10 !== 0) {
-        enemyFieldArray[currIndex + 2].innerHTML = ".";
-        enemyFieldArray[currIndex - 8].innerHTML = ".";
-        enemyFieldArray[currIndex + 12].innerHTML = ".";
-      }
-    } else if (
-      // 4 ship attack crush
-      //bottom target
-      enemyFieldArray[currIndex].classList.contains("brown") &&
-      enemyFieldArray[currIndex - 1].innerHTML === "X" &&
-      enemyFieldArray[currIndex - 2].innerHTML === "X" &&
-      enemyFieldArray[currIndex - 3].innerHTML === "X" &&
-      !enemyFieldArray[currIndex + 1].classList.contains("brown") &&
-      !enemyFieldArray[currIndex - 4].classList.contains("brown")
-    ) {
-      enemyFieldArray[currIndex].innerHTML = "X";
-      enemyFieldArray[currIndex + 10].innerHTML = ".";
-      enemyFieldArray[currIndex - 10].innerHTML = ".";
-      enemyFieldArray[currIndex + 8].innerHTML = ".";
-      enemyFieldArray[currIndex - 12].innerHTML = ".";
-      enemyFieldArray[currIndex + 9].innerHTML = ".";
-      enemyFieldArray[currIndex - 11].innerHTML = ".";
-      enemyFieldArray[currIndex + 7].innerHTML = ".";
-      enemyFieldArray[currIndex - 13].innerHTML = ".";
-      if ((currIndex - 3) % 10 !== 0) {
-        enemyFieldArray[currIndex - 4].innerHTML = ".";
-        enemyFieldArray[currIndex + 6].innerHTML = ".";
-        enemyFieldArray[currIndex - 14].innerHTML = ".";
-      }
-      if ((currIndex + 1) % 10 !== 0) {
-        enemyFieldArray[currIndex + 1].innerHTML = ".";
-        enemyFieldArray[currIndex - 9].innerHTML = ".";
-        enemyFieldArray[currIndex + 11].innerHTML = ".";
-      }
-    } else if (
-      // 4 ship attack
-      (enemyFieldArray[currIndex].classList.contains("brown") &&
-        enemyFieldArray[currIndex + 1].classList.contains("brown") &&
-        enemyFieldArray[currIndex + 2].classList.contains("brown") &&
-        enemyFieldArray[currIndex + 3].classList.contains("brown")) ||
-      (enemyFieldArray[currIndex].classList.contains("brown") &&
-        enemyFieldArray[currIndex + 1].classList.contains("brown") &&
-        enemyFieldArray[currIndex + 2].classList.contains("brown") &&
-        enemyFieldArray[currIndex - 1].classList.contains("brown")) ||
-      (enemyFieldArray[currIndex].classList.contains("brown") &&
-        enemyFieldArray[currIndex + 1].classList.contains("brown") &&
-        enemyFieldArray[currIndex - 1].classList.contains("brown") &&
-        enemyFieldArray[currIndex - 2].classList.contains("brown")) ||
-      (enemyFieldArray[currIndex].classList.contains("brown") &&
-        enemyFieldArray[currIndex - 1].classList.contains("brown") &&
-        enemyFieldArray[currIndex - 2].classList.contains("brown") &&
-        enemyFieldArray[currIndex - 3].classList.contains("brown"))
-    ) {
-      enemyFieldArray[currIndex].innerHTML = "X";
-    } else if (
-      // 3 ship attack crush
-      //center target
-      enemyFieldArray[currIndex].classList.contains("brown") &&
-      enemyFieldArray[currIndex + 1].innerHTML === "X" &&
-      enemyFieldArray[currIndex - 1].innerHTML === "X" &&
-      !enemyFieldArray[currIndex - 2].classList.contains("brown") &&
-      !enemyFieldArray[currIndex + 2].classList.contains("brown")
-    ) {
-      enemyFieldArray[currIndex].innerHTML = "X";
-      enemyFieldArray[currIndex + 10].innerHTML = ".";
-      enemyFieldArray[currIndex - 10].innerHTML = ".";
-      enemyFieldArray[currIndex + 11].innerHTML = ".";
-      enemyFieldArray[currIndex - 9].innerHTML = ".";
-      enemyFieldArray[currIndex + 9].innerHTML = ".";
-      enemyFieldArray[currIndex - 11].innerHTML = ".";
-      if ((currIndex - 1) % 10 !== 0) {
-        enemyFieldArray[currIndex - 2].innerHTML = ".";
-        enemyFieldArray[currIndex + 8].innerHTML = ".";
-        enemyFieldArray[currIndex - 12].innerHTML = ".";
-      }
-      if ((currIndex + 2) % 10 !== 0) {
-        enemyFieldArray[currIndex + 2].innerHTML = ".";
-        enemyFieldArray[currIndex - 8].innerHTML = ".";
-        enemyFieldArray[currIndex + 12].innerHTML = ".";
-      }
-    } else if (
-      // 3 ship attack crush
-      //top target
-      enemyFieldArray[currIndex].classList.contains("brown") &&
-      enemyFieldArray[currIndex + 1].innerHTML === "X" &&
-      enemyFieldArray[currIndex + 2].innerHTML === "X" &&
-      !enemyFieldArray[currIndex - 1].classList.contains("brown") &&
-      !enemyFieldArray[currIndex + 3].classList.contains("brown")
-    ) {
-      enemyFieldArray[currIndex].innerHTML = "X";
-      enemyFieldArray[currIndex + 10].innerHTML = ".";
-      enemyFieldArray[currIndex - 10].innerHTML = ".";
-      enemyFieldArray[currIndex + 11].innerHTML = ".";
-      enemyFieldArray[currIndex - 9].innerHTML = ".";
-      enemyFieldArray[currIndex + 12].innerHTML = ".";
-      enemyFieldArray[currIndex - 8].innerHTML = ".";
-      if (currIndex % 10 !== 0) {
-        enemyFieldArray[currIndex - 1].innerHTML = ".";
-        enemyFieldArray[currIndex + 9].innerHTML = ".";
-        enemyFieldArray[currIndex - 11].innerHTML = ".";
-      }
-      if ((currIndex + 3) % 10 !== 0) {
-        enemyFieldArray[currIndex + 3].innerHTML = ".";
-        enemyFieldArray[currIndex + 13].innerHTML = ".";
-        enemyFieldArray[currIndex - 7].innerHTML = ".";
-      }
-    } else if (
-      // 3 ship attack crush
-      //bottom target
-      enemyFieldArray[currIndex].classList.contains("brown") &&
-      enemyFieldArray[currIndex - 1].innerHTML === "X" &&
-      enemyFieldArray[currIndex - 2].innerHTML === "X" &&
-      !enemyFieldArray[currIndex + 1].classList.contains("brown") &&
-      !enemyFieldArray[currIndex - 3].classList.contains("brown")
-    ) {
-      enemyFieldArray[currIndex].innerHTML = "X";
-      enemyFieldArray[currIndex + 10].innerHTML = ".";
-      enemyFieldArray[currIndex - 10].innerHTML = ".";
-      enemyFieldArray[currIndex - 11].innerHTML = ".";
-      enemyFieldArray[currIndex + 9].innerHTML = ".";
-      enemyFieldArray[currIndex - 12].innerHTML = ".";
-      enemyFieldArray[currIndex + 8].innerHTML = ".";
-      if ((currIndex + 1) % 10 !== 0) {
-        enemyFieldArray[currIndex + 1].innerHTML = ".";
-        enemyFieldArray[currIndex + 11].innerHTML = ".";
-        enemyFieldArray[currIndex - 9].innerHTML = ".";
-      }
-      if ((currIndex - 2) % 10 !== 0) {
-        enemyFieldArray[currIndex - 3].innerHTML = ".";
-        enemyFieldArray[currIndex + 7].innerHTML = ".";
-        enemyFieldArray[currIndex - 13].innerHTML = ".";
-      }
-    } else if (
-      // 3 ship attack
+const battlePlayer = document.querySelector(".container-player");
 
-      (enemyFieldArray[currIndex].classList.contains("brown") &&
-        enemyFieldArray[currIndex + 1].classList.contains("brown") &&
-        enemyFieldArray[currIndex - 1].classList.contains("brown")) ||
-      (enemyFieldArray[currIndex].classList.contains("brown") &&
-        enemyFieldArray[currIndex + 1].classList.contains("brown") &&
-        enemyFieldArray[currIndex + 2].classList.contains("brown") &&
-        !enemyFieldArray[currIndex - 1].classList.contains("brown")) ||
-      (enemyFieldArray[currIndex].classList.contains("brown") &&
-        enemyFieldArray[currIndex - 1].classList.contains("brown") &&
-        enemyFieldArray[currIndex - 2].classList.contains("brown") &&
-        !enemyFieldArray[currIndex + 1].classList.contains("brown"))
-    ) {
-      enemyFieldArray[currIndex].innerHTML = "X";
-    } else if (
-      // 2 ship attack crush
+const generateField = () => {
+  for (let i = 0; i < 100; i++) {
+    let div = document.createElement("div");
+    div.classList.add("sea-battle__cell-special");
+    battlePlayer.append(div);
+  }
+};
+let battlefieldPlayer = [];
+for (let i = 0; i < 100; i++) {
+  battlefieldPlayer.push({ status: "free", ship: "" });
+}
 
-      enemyFieldArray[currIndex].classList.contains("brown") &&
-      enemyFieldArray[currIndex + 1].className !== "brown" &&
-      enemyFieldArray[currIndex - 1].innerHTML === "X" &&
-      !enemyFieldArray[currIndex - 2].classList.contains("brown")
-    ) {
-      enemyFieldArray[currIndex].innerHTML = "X";
+const battlefieldEnemy = [...battlefieldPlayer];
 
-      enemyFieldArray[currIndex + 10].innerHTML = ".";
-      enemyFieldArray[currIndex + 9].innerHTML = ".";
-      enemyFieldArray[currIndex - 11].innerHTML = ".";
-      enemyFieldArray[currIndex - 10].innerHTML = ".";
+let newArr = [...battlefieldPlayer];
+const ship = {
+  oneShip1: false,
+  oneShip2: false,
+  oneShip3: false,
+  oneShip4: false,
+  twoShip1: false,
+  twoShip2: false,
+  twoShip3: false,
+  threeShip1: false,
+  threeShip1: false,
+  fourShip: false,
+};
+// Random generator
+const randomArrange = (arr) => {
+  let randomNumberFour = String(Math.trunc(Math.random() * 100));
 
-      if ((currIndex - 1) % 10 !== 0) {
-        enemyFieldArray[currIndex - 2].innerHTML = ".";
-        enemyFieldArray[currIndex + 8].innerHTML = ".";
-        enemyFieldArray[currIndex - 12].innerHTML = ".";
+  randomNumberFour =
+    randomNumberFour.length === 1 ? "0" + randomNumberFour : randomNumberFour;
+  let randomNumberThree1 = String(Math.trunc(Math.random() * 100));
+  randomNumberThree1 =
+    randomNumberThree1.length === 1
+      ? "0" + randomNumberThree1
+      : randomNumberThree1;
+  let randomNumberThree2 = String(Math.trunc(Math.random() * 100));
+  randomNumberThree2 =
+    randomNumberThree2.length === 1
+      ? "0" + randomNumberThree2
+      : randomNumberThree2;
+  let randomNumberTwo1 = String(Math.trunc(Math.random() * 100));
+  randomNumberTwo1 =
+    randomNumberTwo1.length === 1 ? "0" + randomNumberTwo1 : randomNumberTwo1;
+  let randomNumberTwo2 = String(Math.trunc(Math.random() * 100));
+  randomNumberTwo2 =
+    randomNumberTwo2.length === 1 ? "0" + randomNumberTwo2 : randomNumberTwo2;
+  let randomNumberTwo3 = String(Math.trunc(Math.random() * 100));
+  randomNumberTwo3 =
+    randomNumberTwo3.length === 1 ? "0" + randomNumberTwo3 : randomNumberTwo3;
+  let randomNumberOne1 = String(Math.trunc(Math.random() * 100));
+  randomNumberOne1 =
+    randomNumberOne1.length === 1 ? "0" + randomNumberOne1 : randomNumberOne1;
+  let randomNumberOne2 = String(Math.trunc(Math.random() * 100));
+  randomNumberOne2 =
+    randomNumberOne2.length === 1 ? "0" + randomNumberOne2 : randomNumberOne2;
+  let randomNumberOne3 = String(Math.trunc(Math.random() * 100));
+  randomNumberOne3 =
+    randomNumberOne3.length === 1 ? "0" + randomNumberOne3 : randomNumberOne3;
+  let randomNumberOne4 = String(Math.trunc(Math.random() * 100));
+  randomNumberOne4 =
+    randomNumberOne4.length === 1 ? "0" + randomNumberOne4 : randomNumberOne4;
+  let randomDirection = Math.round(Math.random());
+  console.log(`4 : ${randomNumberFour}`);
+  console.log(`31 : ${randomNumberThree1}`);
+  console.log(`32 : ${randomNumberThree2}`);
+  console.log(`21 : ${randomNumberTwo1}`);
+  let direction = randomDirection === 1 ? "horizontal" : "vertical";
+  // create four
+  if (!ship.fourShip) {
+    if (direction === "horizontal") {
+      if (
+        randomNumberFour.slice(1) === "6" ||
+        randomNumberFour.slice(1) === "7" ||
+        randomNumberFour.slice(1) === "8" ||
+        randomNumberFour.slice(1) === "9"
+      ) {
+        for (let i = +randomNumberFour; i > randomNumberFour - 4; i--) {
+          arr[i].status = "part4Ship";
+
+          arr[i + 10]?.status === "free" ? (arr[i + 10].status = "freeze") : "";
+          arr[i - 10]?.status === "free" ? (arr[i - 10].status = "freeze") : "";
+          arr[i - 1]?.status === "free" ? (arr[i - 1].status = "freeze") : "";
+          arr[i - 11]?.status === "free" ? (arr[i - 11].status = "freeze") : "";
+          arr[i + 9]?.status === "free" ? (arr[i + 9].status = "freeze") : "";
+          if (randomNumberFour.slice(1) !== "9") {
+            arr[i + 1]?.status === "free" ? (arr[i + 1].status = "freeze") : "";
+            arr[i + 11]?.status === "free"
+              ? (arr[i + 11].status = "freeze")
+              : "";
+            arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
+          }
+        }
+      } else {
+        for (let i = +randomNumberFour; i < +randomNumberFour + 4; i++) {
+          arr[i].status = "part4Ship";
+          arr[i + 10]?.status === "free" ? (arr[i + 10].status = "freeze") : "";
+          arr[i - 10]?.status === "free" ? (arr[i - 10].status = "freeze") : "";
+          arr[i + 1]?.status === "free" ? (arr[i + 1].status = "freeze") : "";
+          arr[i + 11]?.status === "free" ? (arr[i + 11].status = "freeze") : "";
+          arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
+
+          if (randomNumberFour.slice(1) !== "0") {
+            arr[i - 11]?.status === "free"
+              ? (arr[i - 11].status = "freeze")
+              : "";
+            arr[i - 1]?.status === "free" ? (arr[i - 1].status = "freeze") : "";
+            arr[i + 9]?.status === "free" ? (arr[i + 9].status = "freeze") : "";
+          }
+        }
       }
-      if ((currIndex + 1) % 10 !== 0) {
-        enemyFieldArray[currIndex + 1].innerHTML = ".";
-        enemyFieldArray[currIndex - 9].innerHTML = ".";
-        enemyFieldArray[currIndex + 11].innerHTML = ".";
-      }
-    } else if (
-      enemyFieldArray[currIndex].classList.contains("brown") &&
-      !enemyFieldArray[currIndex + 2].classList.contains("brown") &&
-      enemyFieldArray[currIndex + 1].innerHTML === "X" &&
-      !enemyFieldArray[currIndex - 1].classList.contains("brown")
-    ) {
-      enemyFieldArray[currIndex].innerHTML = "X";
-      enemyFieldArray[currIndex + 10].innerHTML = ".";
-      enemyFieldArray[currIndex - 10].innerHTML = ".";
-      enemyFieldArray[currIndex + 11].innerHTML = ".";
+    }
 
-      enemyFieldArray[currIndex - 9].innerHTML = ".";
-      if (currIndex % 10 !== 0) {
-        enemyFieldArray[currIndex - 1].innerHTML = ".";
-        enemyFieldArray[currIndex + 9].innerHTML = ".";
-        enemyFieldArray[currIndex - 11].innerHTML = ".";
+    if (direction === "vertical") {
+      if (
+        randomNumberFour.slice(0, 1) === "7" ||
+        randomNumberFour.slice(0, 1) === "8" ||
+        randomNumberFour.slice(0, 1) === "9"
+      ) {
+        for (let i = +randomNumberFour; i > randomNumberFour - 40; i--) {
+          if (i % 10 !== +randomNumberFour.slice(1)) continue;
+          arr[i].status = "part4Ship";
+          checkFourShip(arr, i, randomNumberFour);
+        }
+      } else {
+        for (let i = +randomNumberFour; i < +randomNumberFour + 40; i++) {
+          if (i % 10 !== +randomNumberFour.slice(1)) continue;
+          arr[i].status = "part4Ship";
+          checkFourShip(arr, i, randomNumberFour);
+        }
       }
-      if ((currIndex + 2) % 10 !== 0) {
-        enemyFieldArray[currIndex + 2].innerHTML = ".";
-        enemyFieldArray[currIndex - 8].innerHTML = ".";
-        enemyFieldArray[currIndex + 12].innerHTML = ".";
-      }
-    } else if (
-      // 2 ship attack
-      (enemyFieldArray[currIndex].classList.contains("brown") &&
-        enemyFieldArray[currIndex + 1].className !== "brown" &&
-        enemyFieldArray[currIndex - 1].classList.contains("brown")) ||
-      (enemyFieldArray[currIndex].classList.contains("brown") &&
-        enemyFieldArray[currIndex + 1].classList.contains("brown") &&
-        enemyFieldArray[currIndex - 1].className !== "brown")
-    ) {
-      enemyFieldArray[currIndex].innerHTML = "X";
-    } else if (
-      enemyFieldArray[currIndex].classList.contains("brown") &&
-      enemyFieldArray[currIndex + 1].className !== "brown" &&
-      enemyFieldArray[currIndex - 1].className !== "brown"
-    ) {
-      // 1 ship
+    }
+    ship.fourShip = true;
+  }
+  // create three1
+  if (!ship.threeShip1) {
+    createThreeShip(direction,arr,randomNumberThree1)
+    ship.threeShip1 = true;
+  }
+  if (!ship.threeShip2) {
+    createThreeShip(direction,arr,randomNumberThree2)
+    ship.threeShip2 = true;
+  }
 
-      enemyFieldArray[currIndex - 1].innerHTML = ".";
-      enemyFieldArray[currIndex].innerHTML = "X";
-      enemyFieldArray[currIndex + 1].innerHTML = ".";
-      enemyFieldArray[currIndex + 10].innerHTML = ".";
-      enemyFieldArray[currIndex + 9].innerHTML = ".";
-      enemyFieldArray[currIndex + 11].innerHTML = ".";
+  if (!ship.twoShip1) {
+    createTwoShips(direction, arr, randomNumberTwo1);
+    ship.twoShip1 = true;
+  }
+  if (!ship.twoShip2) {
+    createTwoShips(direction, arr, randomNumberTwo2);
+    ship.twoShip2 = true;
+  }
+  if (!ship.twoShip3) {
+    createTwoShips(direction, arr, randomNumberTwo3);
+    ship.twoShip3 = true;
+  }
+  if (!ship.oneShip1) {
+    createOneShip(direction, arr, randomNumberOne1);
+    ship.oneShip1 = true;
+  }
+  if (!ship.oneShip2) {
+    createOneShip(direction, arr, randomNumberOne2);
+    ship.oneShip2 = true;
+  }
+  if (!ship.oneShip3) {
+    createOneShip(direction, arr, randomNumberOne3);
+    ship.oneShip3 = true;
+  }
+  if (!ship.oneShip4) {
+    createOneShip(direction, arr, randomNumberOne4);
+    ship.oneShip4 = true;
+  }
+};
+
+const checkFourShip = (arr, i, number) => {
+  if (number.slice(1) === "0") {
+    arr[i + 1]?.status === "free" ? (arr[i + 1].status = "freeze") : "";
+    arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
+    arr[i + 11]?.status === "free" ? (arr[i + 11].status = "freeze") : "";
+    arr[i - 10]?.status === "free" ? (arr[i - 10].status = "freeze") : "";
+    arr[i + 10]?.status === "free" ? (arr[i + 10].status = "freeze") : "";
+  } else if (number.slice(1) === "9") {
+    arr[i - 10]?.status === "free" ? (arr[i - 10].status = "freeze") : "";
+    arr[i - 1]?.status === "free" ? (arr[i - 1].status = "freeze") : "";
+    arr[i - 11]?.status === "free" ? (arr[i - 11].status = "freeze") : "";
+    arr[i + 9]?.status === "free" ? (arr[i + 9].status = "freeze") : "";
+    arr[i + 10]?.status === "free" ? (arr[i + 10].status = "freeze") : "";
+  } else {
+    arr[i + 1]?.status === "free" ? (arr[i + 1].status = "freeze") : "";
+    arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
+    arr[i + 11]?.status === "free" ? (arr[i + 11].status = "freeze") : "";
+    arr[i - 10]?.status === "free" ? (arr[i - 10].status = "freeze") : "";
+    arr[i - 1]?.status === "free" ? (arr[i - 1].status = "freeze") : "";
+    arr[i - 11]?.status === "free" ? (arr[i - 11].status = "freeze") : "";
+    arr[i + 9]?.status === "free" ? (arr[i + 9].status = "freeze") : "";
+    arr[i + 10]?.status === "free" ? (arr[i + 10].status = "freeze") : "";
+  }
+};
+const createOneShip = (direction, arr, number) => {
+  if (direction === "horizontal") {
+    if (number.slice(1) === "9") {
+      if (arr[+number].status === "free") {
+        for (let i = +number; i > number - 1; i--) {
+          arr[i].status = "oneShip";
+
+          arr[i + 10]?.status === "free" || arr[i + 10]?.status === "freeze"
+            ? (arr[i + 10].status = "freeze")
+            : "";
+          arr[i - 10]?.status === "free" || arr[i - 10]?.status === "freeze"
+            ? (arr[i - 10].status = "freeze")
+            : "";
+          arr[i - 1]?.status === "free" || arr[i - 1]?.status === "freeze"
+            ? (arr[i - 1].status = "freeze")
+            : "";
+          arr[i - 11]?.status === "free" || arr[i - 11]?.status === "freeze"
+            ? (arr[i - 11].status = "freeze")
+            : "";
+          arr[i + 9]?.status === "free" || arr[i + 9]?.status === "freeze"
+            ? (arr[i + 9].status = "freeze")
+            : "";
+          if (number.slice(1) !== "9") {
+            arr[i + 1]?.status === "free" || arr[i + 1]?.status === "freeze"
+              ? (arr[i + 1].status = "freeze")
+              : "";
+            arr[i + 11]?.status === "free" || arr[i + 11]?.status === "freeze"
+              ? (arr[i + 11].status = "freeze")
+              : "";
+            arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
+          }
+        }
+      } else {
+        randomArrange(arr);
+      }
     } else {
-      target.innerHTML = ".";
+      if (arr[+number].status === "free") {
+        for (let i = +number; i < +number + 1; i++) {
+          arr[i].status = "oneShip";
+          arr[i + 10]?.status === "free" ? (arr[i + 10].status = "freeze") : "";
+          arr[i - 10]?.status === "free" ? (arr[i - 10].status = "freeze") : "";
+          arr[i + 1]?.status === "free" ? (arr[i + 1].status = "freeze") : "";
+          arr[i + 11]?.status === "free" ? (arr[i + 11].status = "freeze") : "";
+          arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
+
+          if (number.slice(1) !== "0") {
+            arr[i - 11]?.status === "free"
+              ? (arr[i - 11].status = "freeze")
+              : "";
+            arr[i - 1]?.status === "free" ? (arr[i - 1].status = "freeze") : "";
+            arr[i + 9]?.status === "free" ? (arr[i + 9].status = "freeze") : "";
+          }
+        }
+      } else {
+        randomArrange(arr);
+      }
     }
   }
-  console.log(e.target);
-};
 
-let random = Math.round(Math.random() * 100);
-console.log(random);
-const arrangmentShip = (item, index) => {
-  if ((index === 0) | (index === 3) | (index === 5) | (index === 7)) {
-    item.classList.add("brown");
-  }
-  if ((index === 20) | (index === 21) | (index == 28) | (index === 29)) {
-    item.classList.add("brown");
-  }
-  if (
-    (index === 40) |
-    (index === 41) |
-    (index == 42) |
-    (index === 46) |
-    (index === 47) |
-    (index === 48)
-  ) {
-    item.classList.add("brown");
-  }
-  if ((index === 60) | (index === 61) | (index == 62) | (index === 63)) {
-    item.classList.add("brown");
+  if (direction === "vertical") {
+    if (number.slice(0, 1) === "9") {
+      if (arr[+number].status === "free") {
+        for (let i = +number; i > number - 10; i--) {
+          if (i % 10 !== +number.slice(1)) continue;
+          arr[i].status = "oneShip";
+          checkFourShip(arr, i, number);
+        }
+      } else {
+        randomArrange(arr);
+      }
+    } else {
+      if (arr[+number].status === "free") {
+        for (let i = +number; i < +number + 10; i++) {
+          if (i % 10 !== +number.slice(1)) continue;
+          arr[i].status = "oneShip";
+          checkFourShip(arr, i, number);
+        }
+      } else {
+        randomArrange(arr);
+      }
+    }
   }
 };
-const checkKilledShip = (item) => {
-  let currIndex = enemyFieldArray.indexOf(item);
+const createTwoShips = (direction, arr, number) => {
+  if (direction === "horizontal") {
+    if (number.slice(1) === "8" || number.slice(1) === "9") {
+      if (
+        arr[+number].status === "free" &&
+        arr[+number - 1].status === "free"
+      ) {
+        for (let i = +number; i > number - 2; i--) {
+          arr[i].status = "part2Ship";
 
-  if (
-    (enemyFieldArray[++currIndex].backgroundColor !== "brown") &
-    (enemyFieldArray[--currIndex].backgroundColor !== "brown")
-  ) {
-    return true;
+          arr[i + 10]?.status === "free" || arr[i + 10]?.status === "freeze"
+            ? (arr[i + 10].status = "freeze")
+            : "";
+          arr[i - 10]?.status === "free" || arr[i - 10]?.status === "freeze"
+            ? (arr[i - 10].status = "freeze")
+            : "";
+          arr[i - 1]?.status === "free" || arr[i - 1]?.status === "freeze"
+            ? (arr[i - 1].status = "freeze")
+            : "";
+          arr[i - 11]?.status === "free" || arr[i - 11]?.status === "freeze"
+            ? (arr[i - 11].status = "freeze")
+            : "";
+          arr[i + 9]?.status === "free" || arr[i + 9]?.status === "freeze"
+            ? (arr[i + 9].status = "freeze")
+            : "";
+          if (number.slice(1) !== "9") {
+            arr[i + 1]?.status === "free" || arr[i + 1]?.status === "freeze"
+              ? (arr[i + 1].status = "freeze")
+              : "";
+            arr[i + 11]?.status === "free" || arr[i + 11]?.status === "freeze"
+              ? (arr[i + 11].status = "freeze")
+              : "";
+            arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
+          }
+        }
+      } else {
+        randomArrange(arr);
+      }
+    } else {
+      if (
+        arr[+number].status === "free" &&
+        arr[+number + 1].status === "free"
+      ) {
+        for (let i = +number; i < +number + 2; i++) {
+          arr[i].status = "part2Ship";
+          arr[i + 10]?.status === "free" ? (arr[i + 10].status = "freeze") : "";
+          arr[i - 10]?.status === "free" ? (arr[i - 10].status = "freeze") : "";
+          arr[i + 1]?.status === "free" ? (arr[i + 1].status = "freeze") : "";
+          arr[i + 11]?.status === "free" ? (arr[i + 11].status = "freeze") : "";
+          arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
+
+          if (number.slice(1) !== "0") {
+            arr[i - 11]?.status === "free"
+              ? (arr[i - 11].status = "freeze")
+              : "";
+            arr[i - 1]?.status === "free" ? (arr[i - 1].status = "freeze") : "";
+            arr[i + 9]?.status === "free" ? (arr[i + 9].status = "freeze") : "";
+          }
+        }
+      } else {
+        randomArrange(arr);
+      }
+    }
   }
-  return false;
+
+  if (direction === "vertical") {
+    if (number.slice(0, 1) === "9") {
+      if (
+        arr[+number].status === "free" &&
+        arr[+number - 10].status === "free"
+      ) {
+        for (let i = +number; i > number - 20; i--) {
+          if (i % 10 !== +number.slice(1)) continue;
+          arr[i].status = "part2Ship";
+          checkFourShip(arr, i, number);
+        }
+      } else {
+        randomArrange(arr);
+      }
+    } else {
+      if (
+        arr[+number].status === "free" &&
+        arr[+number + 10].status === "free"
+      ) {
+        for (let i = +number; i < +number + 20; i++) {
+          if (i % 10 !== +number.slice(1)) continue;
+          arr[i].status = "part2Ship";
+          checkFourShip(arr, i, number);
+        }
+      } else {
+        randomArrange(arr);
+      }
+    }
+  }
 };
-battleEnemy.addEventListener("click", makeShoot);
-const ships = [1, 1, 1, 1, 2, 2, 2, 3, 3, 4];
-// let field = [
-//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-// ];
-myFieldArray.map(arrangmentShip);
-enemyFieldArray.map(arrangmentShip);
-console.log(start);
+const createThreeShip = (direction,arr,number) => {
+  if (direction === "horizontal") {
+    if (
+      number.slice(1) === "7" ||
+      number.slice(1) === "8" ||
+      number.slice(1) === "9"
+    ) {
+      if (
+        arr[+number].status === "free" &&
+        arr[+number - 1].status === "free" &&
+        arr[+number - 2].status === "free"
+      ) {
+        for (let i = +number; i > number - 3; i--) {
+          arr[i].status = "part3Ship";
+
+          arr[i + 10]?.status === "free" || arr[i + 10]?.status === "freeze"
+            ? (arr[i + 10].status = "freeze")
+            : "";
+          arr[i - 10]?.status === "free" || arr[i - 10]?.status === "freeze"
+            ? (arr[i - 10].status = "freeze")
+            : "";
+          arr[i - 1]?.status === "free" || arr[i - 1]?.status === "freeze"
+            ? (arr[i - 1].status = "freeze")
+            : "";
+          arr[i - 11]?.status === "free" || arr[i - 11]?.status === "freeze"
+            ? (arr[i - 11].status = "freeze")
+            : "";
+          arr[i + 9]?.status === "free" || arr[i + 9]?.status === "freeze"
+            ? (arr[i + 9].status = "freeze")
+            : "";
+          if (number.slice(1) !== "9") {
+            arr[i + 1]?.status === "free" || arr[i + 1]?.status === "freeze"
+              ? (arr[i + 1].status = "freeze")
+              : "";
+            arr[i + 11]?.status === "free" || arr[i + 11]?.status === "freeze"
+              ? (arr[i + 11].status = "freeze")
+              : "";
+            arr[i - 9]?.status === "free"
+              ? (arr[i - 9].status = "freeze")
+              : "";
+          }
+        }
+      } else {
+        randomArrange(arr);
+      }
+    } else {
+      if (
+        arr[+number].status === "free" &&
+        arr[+number + 1].status === "free" &&
+        arr[+number + 2].status === "free"
+      ) {
+        for (let i = +number; i < +number + 3; i++) {
+          arr[i].status = "part3Ship";
+          arr[i + 10]?.status === "free"
+            ? (arr[i + 10].status = "freeze")
+            : "";
+          arr[i - 10]?.status === "free"
+            ? (arr[i - 10].status = "freeze")
+            : "";
+          arr[i + 1]?.status === "free" ? (arr[i + 1].status = "freeze") : "";
+          arr[i + 11]?.status === "free"
+            ? (arr[i + 11].status = "freeze")
+            : "";
+          arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
+
+          if (number.slice(1) !== "0") {
+            arr[i - 11]?.status === "free"
+              ? (arr[i - 11].status = "freeze")
+              : "";
+            arr[i - 1]?.status === "free"
+              ? (arr[i - 1].status = "freeze")
+              : "";
+            arr[i + 9]?.status === "free"
+              ? (arr[i + 9].status = "freeze")
+              : "";
+          }
+        }
+      } else {
+        randomArrange(arr);
+      }
+    }
+  }
+
+  if (direction === "vertical") {
+    if (
+      number.slice(0, 1) === "8" ||
+      number.slice(0, 1) === "9"
+    ) {
+      if (
+        arr[+number].status === "free" &&
+        arr[+number - 10].status === "free" &&
+        arr[+number - 20].status === "free"
+      ) {
+        for (let i = +number; i > number - 30; i--) {
+          if (i % 10 !== +number.slice(1)) continue;
+          arr[i].status = "part3Ship";
+          checkFourShip(arr, i, number);
+        }
+      } else {
+        randomArrange(arr);
+      }
+    } else {
+      if (
+        arr[+number].status === "free" &&
+        arr[+number + 10].status === "free" &&
+        arr[+number + 20].status === "free"
+      ) {
+        for (let i = +number; i < +number + 30; i++) {
+          if (i % 10 !== +number.slice(1)) continue;
+          arr[i].status = "part3Ship";
+          checkFourShip(arr, i, number);
+        }
+      } else {
+        randomArrange(arr);
+      }
+    }
+  }
+}
+generateField();
+let playerField = document.getElementsByClassName("sea-battle__cell-special");
+let playerFieldArray = Array.from(playerField);
+
+randomArrange(newArr);
+let j = 0;
+
+playerFieldArray.map((item) => {
+  item.classList.add(newArr[j++].status);
+});
+
+const fireEnemy = (arrDiv, arrNum) => {
+  let random = Math.round(Math.random() * 100);
+  // const target = e.target;
+  // const currentIndexField = arrDiv.indexOf(target)
+  // const currentIndexArr = currentIndexField
+  arrDiv[random].click();
+  if (arrNum[random].status === "hit") {
+    fireEnemy();
+  }
+  if (arrNum[random].status === "free") {
+    arrDiv[random].innerHTML = ".";
+  }
+  if (arrNum[random].status === "ship") {
+    if (arrNum.ship === "1-deck") {
+      arrNum[random].status = "destroyed";
+    }
+    if (arrNum.ship === "2-deck") {
+      if (
+        arrNum[random + 1].status === "hit" ||
+        arrNum[random - 1].status === "hit" ||
+        arrNum[random + 10].status === "hit" ||
+        arrNum[random - 10].status === "hit"
+      ) {
+        arrNum[random].status = "destroyed";
+        fireEnemy();
+      }
+      arrNum[random].status = "hit";
+      fireEnemy();
+    }
+  }
+};
+//three
+
+//two
+
+// one

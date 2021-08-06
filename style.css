@@ -57,15 +57,16 @@
 .white {
   background-color: #fff;
 }
+.miss {
+  background: rgb(148, 148, 148);
+}
 .hit {
   background: rgb(255, 0, 0);
 }
 .crush {
   background: black;
 }
-.miss {
-  background: rgb(148, 148, 148);
-}
+
 .block-container {
   position: absolute;
   width: 100%;

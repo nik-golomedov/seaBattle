@@ -862,7 +862,7 @@ const startGame = () => {
 
   if (statusPlayer === "ready") {
     arrange(battlefieldEnemy, enemyFieldArray, shipsEnemy)();
-    enemyFieldArray.forEach((item) => (item.style.backgroundColor = "white"));
+    enemyFieldArray.forEach((item) => (item.classList.add ("white")));
   }
 };
 const turnFire = () => {

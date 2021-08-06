@@ -49,6 +49,10 @@
 .freeze {
   background: rgb(255, 255, 255);
 }
+
+.white {
+  background-color: #fff;
+}
 .hit {
   background: rgb(255, 0, 0);
 }
@@ -57,9 +61,6 @@
 }
 .miss {
   background: rgb(148, 148, 148);
-}
-.white {
-  background-color: #fff;
 }
 .block-container {
   position: absolute;

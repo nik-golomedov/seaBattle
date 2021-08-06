@@ -17,6 +17,10 @@
   font-size: 18px;
   margin-left: 50px;
 }
+.btn:disabled {
+  background-color: rgb(163, 163, 163);
+  color: rgb(12, 10, 10);
+}
 .sea-battle__cell-player,
 .sea-battle__cell-enemy,
 .sea-battle__cell-player-ship {
@@ -72,7 +76,7 @@
 }
 .container-player-ship {
   display: flex;
-  width: 100%;
+  width: 800px;
   height: 800px;
   flex-flow: row wrap;
 }

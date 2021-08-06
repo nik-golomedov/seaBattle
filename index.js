@@ -4,6 +4,8 @@ const randomArrangeBtn = document.querySelector(".btnRandom");
 const start = document.querySelector(".btnStart");
 const blockContainer = document.querySelector(".block-container");
 const containerPlayerShip = document.querySelector(".container-player-ship");
+const createOneShip4 = document.querySelector(".oneShip4");
+let startFlag = false;
 let counterPlayer = 0;
 let counterEnemy = 0;
 let turn = "player";
@@ -53,7 +55,7 @@ for (let i = 0; i < 100; i++) {
 }
 const battlefieldEnemy = [];
 for (let i = 0; i < 100; i++) {
-  battlefieldEnemy.push({ status: "free", ship: "" });
+  battlefieldEnemy.push({ status: "free" });
 }
 
 generateEnemyField();
@@ -402,10 +404,24 @@ const checkHorizontal = (number, arr, i) => {
     arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
   }
 };
-
+const arrangePlayer = (arr, arrBattle, ship) => () => {
+  let j = 0;
+  playerFieldArray.map((item) => {
+    item.className = "sea-battle__cell-player";
+  });
+  j = 0;
+  statusPlayer = "ready";
+  randomArrange(arr, ship);
+  arrBattle.map((item) => {
+    item.classList.add(arr[j++].status);
+  });
+  for (key in shipsPlayer) {
+    shipsPlayer[key] = false;
+  }
+  battlefieldPlayer.forEach((item) => (item.status = "free"));
+};
 const arrange = (arr, arrBattle, ship) => () => {
   let j = 0;
-  statusPlayer = "ready";
   randomArrange(arr, ship);
   arrBattle.map((item) => {
     item.classList.add(arr[j++].status);
@@ -414,7 +430,7 @@ const arrange = (arr, arrBattle, ship) => () => {
 
 randomArrangeBtn.addEventListener(
   "click",
-  arrange(battlefieldPlayer, playerFieldArray, shipsPlayer)
+  arrangePlayer(battlefieldPlayer, playerFieldArray, shipsPlayer)
 );
 const firePlayer = (e) => {
   const target = e.target;
@@ -749,6 +765,10 @@ const startGame = () => {
   if (statusPlayer === "ready") {
     arrange(battlefieldEnemy, enemyFieldArray, shipsEnemy)();
     enemyFieldArray.forEach((item) => item.classList.add("white"));
+    startFlag = true;
+    startFlag === true
+      ? (randomArrangeBtn.disabled = true)
+      : (randomArrangeBtn.disabled = false);
   }
 };
 const turnFire = () => {

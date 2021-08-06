@@ -47,10 +47,15 @@ const generateEnemyField = () => {
 //   }
 // };
 generatePlayerField();
-let battlefieldPlayer = [];
+const battlefieldPlayer = [];
 for (let i = 0; i < 100; i++) {
   battlefieldPlayer.push({ status: "free" });
 }
+const battlefieldEnemy = [];
+for (let i = 0; i < 100; i++) {
+  battlefieldEnemy.push({ status: "free", ship: "" });
+}
+
 generateEnemyField();
 const playerField = document.getElementsByClassName("sea-battle__cell-player");
 const playerFieldArray = Array.from(playerField);
@@ -62,47 +67,11 @@ const enemyFieldArray = Array.from(enemyField);
 // const playerFieldShipArray = Array.from(playerField);
 // generateContainerPlayerShip()
 
-let battlefieldEnemy = [];
-for (let i = 0; i < 100; i++) {
-  battlefieldEnemy.push({ status: "free", ship: "" });
-}
-
 // Random generator
 const randomArrange = (arr, ship) => {
   let randomNumberFour = String(Math.trunc(Math.random() * 100));
   randomNumberFour =
     randomNumberFour.length === 1 ? "0" + randomNumberFour : randomNumberFour;
-  let randomNumberThree1 = String(Math.trunc(Math.random() * 100));
-  randomNumberThree1 =
-    randomNumberThree1.length === 1
-      ? "0" + randomNumberThree1
-      : randomNumberThree1;
-  let randomNumberThree2 = String(Math.trunc(Math.random() * 100));
-  randomNumberThree2 =
-    randomNumberThree2.length === 1
-      ? "0" + randomNumberThree2
-      : randomNumberThree2;
-  let randomNumberTwo1 = String(Math.trunc(Math.random() * 100));
-  randomNumberTwo1 =
-    randomNumberTwo1.length === 1 ? "0" + randomNumberTwo1 : randomNumberTwo1;
-  let randomNumberTwo2 = String(Math.trunc(Math.random() * 100));
-  randomNumberTwo2 =
-    randomNumberTwo2.length === 1 ? "0" + randomNumberTwo2 : randomNumberTwo2;
-  let randomNumberTwo3 = String(Math.trunc(Math.random() * 100));
-  randomNumberTwo3 =
-    randomNumberTwo3.length === 1 ? "0" + randomNumberTwo3 : randomNumberTwo3;
-  let randomNumberOne1 = String(Math.trunc(Math.random() * 100));
-  randomNumberOne1 =
-    randomNumberOne1.length === 1 ? "0" + randomNumberOne1 : randomNumberOne1;
-  let randomNumberOne2 = String(Math.trunc(Math.random() * 100));
-  randomNumberOne2 =
-    randomNumberOne2.length === 1 ? "0" + randomNumberOne2 : randomNumberOne2;
-  let randomNumberOne3 = String(Math.trunc(Math.random() * 100));
-  randomNumberOne3 =
-    randomNumberOne3.length === 1 ? "0" + randomNumberOne3 : randomNumberOne3;
-  let randomNumberOne4 = String(Math.trunc(Math.random() * 100));
-  randomNumberOne4 =
-    randomNumberOne4.length === 1 ? "0" + randomNumberOne4 : randomNumberOne4;
   let randomDirection = Math.round(Math.random());
   let direction = randomDirection === 1 ? "horizontal" : "vertical";
   // create four
@@ -117,18 +86,7 @@ const randomArrange = (arr, ship) => {
         for (let i = +randomNumberFour; i > randomNumberFour - 4; i--) {
           arr[i].status = "part4Ship";
 
-          arr[i + 10]?.status === "free" ? (arr[i + 10].status = "freeze") : "";
-          arr[i - 10]?.status === "free" ? (arr[i - 10].status = "freeze") : "";
-          arr[i - 1]?.status === "free" ? (arr[i - 1].status = "freeze") : "";
-          arr[i - 11]?.status === "free" ? (arr[i - 11].status = "freeze") : "";
-          arr[i + 9]?.status === "free" ? (arr[i + 9].status = "freeze") : "";
-          if (randomNumberFour.slice(1) !== "9") {
-            arr[i + 1]?.status === "free" ? (arr[i + 1].status = "freeze") : "";
-            arr[i + 11]?.status === "free"
-              ? (arr[i + 11].status = "freeze")
-              : "";
-            arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
-          }
+          checkHorizontal(randomNumberFour, arr, i);
         }
       } else {
         for (let i = +randomNumberFour; i < +randomNumberFour + 4; i++) {
@@ -159,59 +117,58 @@ const randomArrange = (arr, ship) => {
         for (let i = +randomNumberFour; i > randomNumberFour - 40; i--) {
           if (i % 10 !== +randomNumberFour.slice(1)) continue;
           arr[i].status = "part4Ship";
-          checkFourShip(arr, i, randomNumberFour);
+          checkRandomArrangeShip(arr, i, randomNumberFour);
         }
       } else {
         for (let i = +randomNumberFour; i < +randomNumberFour + 40; i++) {
           if (i % 10 !== +randomNumberFour.slice(1)) continue;
           arr[i].status = "part4Ship";
-          checkFourShip(arr, i, randomNumberFour);
+          checkRandomArrangeShip(arr, i, randomNumberFour);
         }
       }
     }
     ship.fourShip = true;
   }
-  // create three1
   if (!ship.threeShip1) {
-    createThreeShip(direction, arr, randomNumberThree1, ship);
+    createThreeShip(direction, arr, randomNumberFour, ship);
     ship.threeShip1 = true;
   }
   if (!ship.threeShip2) {
-    createThreeShip(direction, arr, randomNumberThree2, ship);
+    createThreeShip(direction, arr, randomNumberFour, ship);
     ship.threeShip2 = true;
   }
 
   if (!ship.twoShip1) {
-    createTwoShips(direction, arr, randomNumberTwo1, ship);
+    createTwoShips(direction, arr, randomNumberFour, ship);
     ship.twoShip1 = true;
   }
   if (!ship.twoShip2) {
-    createTwoShips(direction, arr, randomNumberTwo2, ship);
+    createTwoShips(direction, arr, randomNumberFour, ship);
     ship.twoShip2 = true;
   }
   if (!ship.twoShip3) {
-    createTwoShips(direction, arr, randomNumberTwo3, ship);
+    createTwoShips(direction, arr, randomNumberFour, ship);
     ship.twoShip3 = true;
   }
   if (!ship.oneShip1) {
-    createOneShip(direction, arr, randomNumberOne1, ship);
+    createOneShip(direction, arr, randomNumberFour, ship);
     ship.oneShip1 = true;
   }
   if (!ship.oneShip2) {
-    createOneShip(direction, arr, randomNumberOne2, ship);
+    createOneShip(direction, arr, randomNumberFour, ship);
     ship.oneShip2 = true;
   }
   if (!ship.oneShip3) {
-    createOneShip(direction, arr, randomNumberOne3, ship);
+    createOneShip(direction, arr, randomNumberFour, ship);
     ship.oneShip3 = true;
   }
   if (!ship.oneShip4) {
-    createOneShip(direction, arr, randomNumberOne4, ship);
+    createOneShip(direction, arr, randomNumberFour, ship);
     ship.oneShip4 = true;
   }
 };
 
-const checkFourShip = (arr, i, number) => {
+const checkRandomArrangeShip = (arr, i, number) => {
   if (number.slice(1) === "0") {
     arr[i + 1]?.status === "free" ? (arr[i + 1].status = "freeze") : "";
     arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
@@ -236,88 +193,38 @@ const checkFourShip = (arr, i, number) => {
   }
 };
 const createOneShip = (direction, arr, number, ship) => {
-  if (direction === "horizontal") {
-    if (number.slice(1) === "9") {
-      if (arr[+number].status === "free") {
-        for (let i = +number; i > number - 1; i--) {
-          arr[i].status = "oneShip";
+  if (number.slice(1) === "9") {
+    if (arr[+number].status === "free") {
+      for (let i = +number; i > number - 1; i--) {
+        arr[i].status = "oneShip";
 
-          arr[i + 10]?.status === "free" || arr[i + 10]?.status === "freeze"
-            ? (arr[i + 10].status = "freeze")
-            : "";
-          arr[i - 10]?.status === "free" || arr[i - 10]?.status === "freeze"
-            ? (arr[i - 10].status = "freeze")
-            : "";
-          arr[i - 1]?.status === "free" || arr[i - 1]?.status === "freeze"
-            ? (arr[i - 1].status = "freeze")
-            : "";
-          arr[i - 11]?.status === "free" || arr[i - 11]?.status === "freeze"
-            ? (arr[i - 11].status = "freeze")
-            : "";
-          arr[i + 9]?.status === "free" || arr[i + 9]?.status === "freeze"
-            ? (arr[i + 9].status = "freeze")
-            : "";
-          if (number.slice(1) !== "9") {
-            arr[i + 1]?.status === "free" || arr[i + 1]?.status === "freeze"
-              ? (arr[i + 1].status = "freeze")
-              : "";
-            arr[i + 11]?.status === "free" || arr[i + 11]?.status === "freeze"
-              ? (arr[i + 11].status = "freeze")
-              : "";
-            arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
-          }
-        }
-      } else {
-        randomArrange(arr, ship);
+        checkHorizontal(number, arr, i);
       }
     } else {
-      if (arr[+number].status === "free") {
-        for (let i = +number; i < +number + 1; i++) {
-          arr[i].status = "oneShip";
-          arr[i + 10]?.status === "free" ? (arr[i + 10].status = "freeze") : "";
-          arr[i - 10]?.status === "free" ? (arr[i - 10].status = "freeze") : "";
-          arr[i + 1]?.status === "free" ? (arr[i + 1].status = "freeze") : "";
-          arr[i + 11]?.status === "free" ? (arr[i + 11].status = "freeze") : "";
-          arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
-
-          if (number.slice(1) !== "0") {
-            arr[i - 11]?.status === "free"
-              ? (arr[i - 11].status = "freeze")
-              : "";
-            arr[i - 1]?.status === "free" ? (arr[i - 1].status = "freeze") : "";
-            arr[i + 9]?.status === "free" ? (arr[i + 9].status = "freeze") : "";
-          }
-        }
-      } else {
-        randomArrange(arr, ship);
-      }
+      randomArrange(arr, ship);
     }
-  }
+  } else {
+    if (arr[+number].status === "free") {
+      for (let i = +number; i < +number + 1; i++) {
+        arr[i].status = "oneShip";
+        arr[i + 10]?.status === "free" ? (arr[i + 10].status = "freeze") : "";
+        arr[i - 10]?.status === "free" ? (arr[i - 10].status = "freeze") : "";
+        arr[i + 1]?.status === "free" ? (arr[i + 1].status = "freeze") : "";
+        arr[i + 11]?.status === "free" ? (arr[i + 11].status = "freeze") : "";
+        arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
 
-  if (direction === "vertical") {
-    if (number.slice(0, 1) === "9") {
-      if (arr[+number].status === "free") {
-        for (let i = +number; i > number - 10; i--) {
-          if (i % 10 !== +number.slice(1)) continue;
-          arr[i].status = "oneShip";
-          checkFourShip(arr, i, number);
+        if (number.slice(1) !== "0") {
+          arr[i - 11]?.status === "free" ? (arr[i - 11].status = "freeze") : "";
+          arr[i - 1]?.status === "free" ? (arr[i - 1].status = "freeze") : "";
+          arr[i + 9]?.status === "free" ? (arr[i + 9].status = "freeze") : "";
         }
-      } else {
-        randomArrange(arr, ship);
       }
     } else {
-      if (arr[+number].status === "free") {
-        for (let i = +number; i < +number + 10; i++) {
-          if (i % 10 !== +number.slice(1)) continue;
-          arr[i].status = "oneShip";
-          checkFourShip(arr, i, number);
-        }
-      } else {
-        randomArrange(arr, ship);
-      }
+      randomArrange(arr, ship);
     }
   }
 };
+
 const createTwoShips = (direction, arr, number, ship) => {
   if (direction === "horizontal") {
     if (number.slice(1) === "8" || number.slice(1) === "9") {
@@ -328,30 +235,7 @@ const createTwoShips = (direction, arr, number, ship) => {
         for (let i = +number; i > number - 2; i--) {
           arr[i].status = "part2Ship";
 
-          arr[i + 10]?.status === "free" || arr[i + 10]?.status === "freeze"
-            ? (arr[i + 10].status = "freeze")
-            : "";
-          arr[i - 10]?.status === "free" || arr[i - 10]?.status === "freeze"
-            ? (arr[i - 10].status = "freeze")
-            : "";
-          arr[i - 1]?.status === "free" || arr[i - 1]?.status === "freeze"
-            ? (arr[i - 1].status = "freeze")
-            : "";
-          arr[i - 11]?.status === "free" || arr[i - 11]?.status === "freeze"
-            ? (arr[i - 11].status = "freeze")
-            : "";
-          arr[i + 9]?.status === "free" || arr[i + 9]?.status === "freeze"
-            ? (arr[i + 9].status = "freeze")
-            : "";
-          if (number.slice(1) !== "9") {
-            arr[i + 1]?.status === "free" || arr[i + 1]?.status === "freeze"
-              ? (arr[i + 1].status = "freeze")
-              : "";
-            arr[i + 11]?.status === "free" || arr[i + 11]?.status === "freeze"
-              ? (arr[i + 11].status = "freeze")
-              : "";
-            arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
-          }
+          checkHorizontal(number, arr, i);
         }
       } else {
         randomArrange(arr, ship);
@@ -392,7 +276,7 @@ const createTwoShips = (direction, arr, number, ship) => {
         for (let i = +number; i > number - 20; i--) {
           if (i % 10 !== +number.slice(1)) continue;
           arr[i].status = "part2Ship";
-          checkFourShip(arr, i, number);
+          checkRandomArrangeShip(arr, i, number);
         }
       } else {
         randomArrange(arr, ship);
@@ -405,7 +289,7 @@ const createTwoShips = (direction, arr, number, ship) => {
         for (let i = +number; i < +number + 20; i++) {
           if (i % 10 !== +number.slice(1)) continue;
           arr[i].status = "part2Ship";
-          checkFourShip(arr, i, number);
+          checkRandomArrangeShip(arr, i, number);
         }
       } else {
         randomArrange(arr, ship);
@@ -427,31 +311,7 @@ const createThreeShip = (direction, arr, number, ship) => {
       ) {
         for (let i = +number; i > number - 3; i--) {
           arr[i].status = "part3Ship";
-
-          arr[i + 10]?.status === "free" || arr[i + 10]?.status === "freeze"
-            ? (arr[i + 10].status = "freeze")
-            : "";
-          arr[i - 10]?.status === "free" || arr[i - 10]?.status === "freeze"
-            ? (arr[i - 10].status = "freeze")
-            : "";
-          arr[i - 1]?.status === "free" || arr[i - 1]?.status === "freeze"
-            ? (arr[i - 1].status = "freeze")
-            : "";
-          arr[i - 11]?.status === "free" || arr[i - 11]?.status === "freeze"
-            ? (arr[i - 11].status = "freeze")
-            : "";
-          arr[i + 9]?.status === "free" || arr[i + 9]?.status === "freeze"
-            ? (arr[i + 9].status = "freeze")
-            : "";
-          if (number.slice(1) !== "9") {
-            arr[i + 1]?.status === "free" || arr[i + 1]?.status === "freeze"
-              ? (arr[i + 1].status = "freeze")
-              : "";
-            arr[i + 11]?.status === "free" || arr[i + 11]?.status === "freeze"
-              ? (arr[i + 11].status = "freeze")
-              : "";
-            arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
-          }
+          checkHorizontal(number, arr, i);
         }
       } else {
         randomArrange(arr, ship);
@@ -494,7 +354,7 @@ const createThreeShip = (direction, arr, number, ship) => {
         for (let i = +number; i > number - 30; i--) {
           if (i % 10 !== +number.slice(1)) continue;
           arr[i].status = "part3Ship";
-          checkFourShip(arr, i, number);
+          checkRandomArrangeShip(arr, i, number);
         }
       } else {
         randomArrange(arr, ship);
@@ -508,7 +368,7 @@ const createThreeShip = (direction, arr, number, ship) => {
         for (let i = +number; i < +number + 30; i++) {
           if (i % 10 !== +number.slice(1)) continue;
           arr[i].status = "part3Ship";
-          checkFourShip(arr, i, number);
+          checkRandomArrangeShip(arr, i, number);
         }
       } else {
         randomArrange(arr, ship);
@@ -516,12 +376,37 @@ const createThreeShip = (direction, arr, number, ship) => {
     }
   }
 };
+const checkHorizontal = (number, arr, i) => {
+  arr[i + 10]?.status === "free" || arr[i + 10]?.status === "freeze"
+    ? (arr[i + 10].status = "freeze")
+    : "";
+  arr[i - 10]?.status === "free" || arr[i - 10]?.status === "freeze"
+    ? (arr[i - 10].status = "freeze")
+    : "";
+  arr[i - 1]?.status === "free" || arr[i - 1]?.status === "freeze"
+    ? (arr[i - 1].status = "freeze")
+    : "";
+  arr[i - 11]?.status === "free" || arr[i - 11]?.status === "freeze"
+    ? (arr[i - 11].status = "freeze")
+    : "";
+  arr[i + 9]?.status === "free" || arr[i + 9]?.status === "freeze"
+    ? (arr[i + 9].status = "freeze")
+    : "";
+  if (number.slice(1) !== "9") {
+    arr[i + 1]?.status === "free" || arr[i + 1]?.status === "freeze"
+      ? (arr[i + 1].status = "freeze")
+      : "";
+    arr[i + 11]?.status === "free" || arr[i + 11]?.status === "freeze"
+      ? (arr[i + 11].status = "freeze")
+      : "";
+    arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
+  }
+};
 
 const arrange = (arr, arrBattle, ship) => () => {
   let j = 0;
   statusPlayer = "ready";
   randomArrange(arr, ship);
-
   arrBattle.map((item) => {
     item.classList.add(arr[j++].status);
   });
@@ -584,7 +469,6 @@ const fireEnemy = () => {
   checkMissEnemy();
 };
 
-document.addEventListener("click", handleClick, true);
 function checkMiss() {
   battlefieldEnemy.forEach((item, index) => {
     item.status === "miss" ? enemyFieldArray[index].classList.add("miss") : "";
@@ -606,7 +490,7 @@ function checkMissEnemy() {
   });
 }
 
-function handleClick(e) {
+function blockRepeat(e) {
   if (
     e.target.classList.contains("miss") ||
     e.target.classList.contains("crush") ||
@@ -713,11 +597,13 @@ function gameOver() {
     battleEnemy.removeEventListener("click", firePlayer);
     start.removeEventListener("click", startGame);
     document.removeEventListener("click", turnFire);
+    document.removeEventListener("click", blockRepeat, true);
     alert("Computer win");
   }
   if (counterEnemy.length === 20) {
     battleEnemy.removeEventListener("click", firePlayer);
     start.removeEventListener("click", startGame);
+    document.removeEventListener("click", blockRepeat, true);
     document.removeEventListener("click", turnFire);
     alert("Player win");
   }
@@ -862,7 +748,7 @@ const startGame = () => {
 
   if (statusPlayer === "ready") {
     arrange(battlefieldEnemy, enemyFieldArray, shipsEnemy)();
-    enemyFieldArray.forEach((item) => (item.classList.add ("white")));
+    enemyFieldArray.forEach((item) => item.classList.add("white"));
   }
 };
 const turnFire = () => {
@@ -870,6 +756,7 @@ const turnFire = () => {
     setTimeout(fireEnemy, 400);
   }
 };
+document.addEventListener("click", blockRepeat, true);
 start.addEventListener("click", startGame);
 document.addEventListener("click", turnFire);
 document.addEventListener("click", gameOver);

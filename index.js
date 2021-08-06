@@ -34,6 +34,7 @@ const generatePlayerField = () => {
     battlePlayer.append(div);
   }
 };
+generatePlayerField();
 const generateEnemyField = () => {
   for (let i = 0; i < 100; i++) {
     let div = document.createElement("div");
@@ -41,14 +42,90 @@ const generateEnemyField = () => {
     battleEnemy.append(div);
   }
 };
+generateEnemyField();
 const generateContainerPlayerShip = () => {
   for (let i = 0; i < 100; i++) {
     let div = document.createElement("div");
+    if (i % 2 === 0 && i < 8) {
+      div.draggable = true;
+      div.classList.add("oneShip");
+    }
+
     div.classList.add("sea-battle__cell-player-ship");
     containerPlayerShip.append(div);
   }
 };
-generatePlayerField();
+
+var dragged;
+
+/* events fired on the draggable target */
+document.addEventListener("drag", function (event) {}, false);
+
+document.addEventListener(
+  "dragstart",
+  function (event) {
+    // store a ref. on the dragged elem
+    dragged = event.target;
+    // make it half transparent
+    event.target.style.opacity = 0.5;
+  },
+  false
+);
+
+document.addEventListener(
+  "dragend",
+  function (event) {
+    // reset the transparency
+    event.target.style.opacity = "";
+  },
+  false
+);
+
+/* events fired on the drop targets */
+document.addEventListener(
+  "dragover",
+  function (event) {
+    // prevent default to allow drop
+    event.preventDefault();
+  },
+  false
+);
+
+document.addEventListener(
+  "dragenter",
+  function (event) {
+    // highlight potential drop target when the draggable element enters it
+    if (event.target.className == "sea-battle__cell-player") {
+    }
+  },
+  false
+);
+
+document.addEventListener(
+  "dragleave",
+  function (event) {
+    // reset background of potential drop target when the draggable element leaves it
+    if (event.target.className == "sea-battle__cell-player") {
+    }
+  },
+  false
+);
+
+document.addEventListener(
+  "drop",
+  function (event) {
+    // prevent default action (open as link for some elements)
+    event.preventDefault();
+    // move dragged elem to the selected drop target
+    if (event.target.className == "sea-battle__cell-player") {
+      event.target.classList.add("oneShip");
+      dragged.parentNode.removeChild(dragged);
+      event.target = dragged;
+    }
+  },
+  false
+);
+
 const battlefieldPlayer = [];
 for (let i = 0; i < 100; i++) {
   battlefieldPlayer.push({ status: "free" });
@@ -58,18 +135,21 @@ for (let i = 0; i < 100; i++) {
   battlefieldEnemy.push({ status: "free" });
 }
 
-generateEnemyField();
 const playerField = document.getElementsByClassName("sea-battle__cell-player");
 const playerFieldArray = Array.from(playerField);
 
 const enemyField = document.getElementsByClassName("sea-battle__cell-enemy");
 const enemyFieldArray = Array.from(enemyField);
 
-// const playerFieldShip = document.getElementsByClassName("sea-battle__cell-player-ship");
-// const playerFieldShipArray = Array.from(playerField);
-// generateContainerPlayerShip()
+const playerFieldShip = document.getElementsByClassName(
+  "sea-battle__cell-player-ship"
+);
+const playerFieldShipArray = Array.from(playerField);
+const oneShip1 = document.createElement("div");
+oneShip1.className = "oneShip";
+generateContainerPlayerShip();
+playerFieldShipArray[0] = oneShip1;
 
-// Random generator
 const randomArrange = (arr, ship) => {
   let randomNumberFour = String(Math.trunc(Math.random() * 100));
   randomNumberFour =
@@ -112,18 +192,18 @@ const randomArrange = (arr, ship) => {
 
     if (direction === "vertical") {
       if (
-        randomNumberFour.slice(0, 1) === "7" ||
-        randomNumberFour.slice(0, 1) === "8" ||
-        randomNumberFour.slice(0, 1) === "9"
+        randomNumberFour[0] === "7" ||
+        randomNumberFour[0] === "8" ||
+        randomNumberFour[0] === "9"
       ) {
         for (let i = +randomNumberFour; i > randomNumberFour - 40; i--) {
-          if (i % 10 !== +randomNumberFour.slice(1)) continue;
+          if (i % 10 !== +randomNumberFour[1]) continue;
           arr[i].status = "part4Ship";
           checkRandomArrangeShip(arr, i, randomNumberFour);
         }
       } else {
         for (let i = +randomNumberFour; i < +randomNumberFour + 40; i++) {
-          if (i % 10 !== +randomNumberFour.slice(1)) continue;
+          if (i % 10 !== +randomNumberFour[1]) continue;
           arr[i].status = "part4Ship";
           checkRandomArrangeShip(arr, i, randomNumberFour);
         }
@@ -169,15 +249,16 @@ const randomArrange = (arr, ship) => {
     ship.oneShip4 = true;
   }
 };
+const manuallyArrange = () => {};
 
 const checkRandomArrangeShip = (arr, i, number) => {
-  if (number.slice(1) === "0") {
+  if (number[1] === "0") {
     arr[i + 1]?.status === "free" ? (arr[i + 1].status = "freeze") : "";
     arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
     arr[i + 11]?.status === "free" ? (arr[i + 11].status = "freeze") : "";
     arr[i - 10]?.status === "free" ? (arr[i - 10].status = "freeze") : "";
     arr[i + 10]?.status === "free" ? (arr[i + 10].status = "freeze") : "";
-  } else if (number.slice(1) === "9") {
+  } else if (number[1] === "9") {
     arr[i - 10]?.status === "free" ? (arr[i - 10].status = "freeze") : "";
     arr[i - 1]?.status === "free" ? (arr[i - 1].status = "freeze") : "";
     arr[i - 11]?.status === "free" ? (arr[i - 11].status = "freeze") : "";
@@ -215,7 +296,7 @@ const createOneShip = (direction, arr, number, ship) => {
         arr[i + 11]?.status === "free" ? (arr[i + 11].status = "freeze") : "";
         arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
 
-        if (number.slice(1) !== "0") {
+        if (number[1] !== "0") {
           arr[i - 11]?.status === "free" ? (arr[i - 11].status = "freeze") : "";
           arr[i - 1]?.status === "free" ? (arr[i - 1].status = "freeze") : "";
           arr[i + 9]?.status === "free" ? (arr[i + 9].status = "freeze") : "";
@@ -229,7 +310,7 @@ const createOneShip = (direction, arr, number, ship) => {
 
 const createTwoShips = (direction, arr, number, ship) => {
   if (direction === "horizontal") {
-    if (number.slice(1) === "8" || number.slice(1) === "9") {
+    if (number[1] === "8" || number[1] === "9") {
       if (
         arr[+number].status === "free" &&
         arr[+number - 1].status === "free"
@@ -255,7 +336,7 @@ const createTwoShips = (direction, arr, number, ship) => {
           arr[i + 11]?.status === "free" ? (arr[i + 11].status = "freeze") : "";
           arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
 
-          if (number.slice(1) !== "0") {
+          if (number[1] !== "0") {
             arr[i - 11]?.status === "free"
               ? (arr[i - 11].status = "freeze")
               : "";
@@ -270,13 +351,13 @@ const createTwoShips = (direction, arr, number, ship) => {
   }
 
   if (direction === "vertical") {
-    if (number.slice(0, 1) === "9") {
+    if (number[0] === "9") {
       if (
         arr[+number].status === "free" &&
         arr[+number - 10].status === "free"
       ) {
         for (let i = +number; i > number - 20; i--) {
-          if (i % 10 !== +number.slice(1)) continue;
+          if (i % 10 !== +number[1]) continue;
           arr[i].status = "part2Ship";
           checkRandomArrangeShip(arr, i, number);
         }
@@ -289,7 +370,7 @@ const createTwoShips = (direction, arr, number, ship) => {
         arr[+number + 10].status === "free"
       ) {
         for (let i = +number; i < +number + 20; i++) {
-          if (i % 10 !== +number.slice(1)) continue;
+          if (i % 10 !== +number[1]) continue;
           arr[i].status = "part2Ship";
           checkRandomArrangeShip(arr, i, number);
         }
@@ -301,11 +382,7 @@ const createTwoShips = (direction, arr, number, ship) => {
 };
 const createThreeShip = (direction, arr, number, ship) => {
   if (direction === "horizontal") {
-    if (
-      number.slice(1) === "7" ||
-      number.slice(1) === "8" ||
-      number.slice(1) === "9"
-    ) {
+    if (number[1] === "7" || number[1] === "8" || number[1] === "9") {
       if (
         arr[+number].status === "free" &&
         arr[+number - 1].status === "free" &&
@@ -332,7 +409,7 @@ const createThreeShip = (direction, arr, number, ship) => {
           arr[i + 11]?.status === "free" ? (arr[i + 11].status = "freeze") : "";
           arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
 
-          if (number.slice(1) !== "0") {
+          if (number[1] !== "0") {
             arr[i - 11]?.status === "free"
               ? (arr[i - 11].status = "freeze")
               : "";
@@ -347,14 +424,14 @@ const createThreeShip = (direction, arr, number, ship) => {
   }
 
   if (direction === "vertical") {
-    if (number.slice(0, 1) === "8" || number.slice(0, 1) === "9") {
+    if (number[0] === "8" || number[0] === "9") {
       if (
         arr[+number].status === "free" &&
         arr[+number - 10].status === "free" &&
         arr[+number - 20].status === "free"
       ) {
         for (let i = +number; i > number - 30; i--) {
-          if (i % 10 !== +number.slice(1)) continue;
+          if (i % 10 !== +number[1]) continue;
           arr[i].status = "part3Ship";
           checkRandomArrangeShip(arr, i, number);
         }
@@ -368,7 +445,7 @@ const createThreeShip = (direction, arr, number, ship) => {
         arr[+number + 20].status === "free"
       ) {
         for (let i = +number; i < +number + 30; i++) {
-          if (i % 10 !== +number.slice(1)) continue;
+          if (i % 10 !== +number[1]) continue;
           arr[i].status = "part3Ship";
           checkRandomArrangeShip(arr, i, number);
         }
@@ -394,7 +471,7 @@ const checkHorizontal = (number, arr, i) => {
   arr[i + 9]?.status === "free" || arr[i + 9]?.status === "freeze"
     ? (arr[i + 9].status = "freeze")
     : "";
-  if (number.slice(1) !== "9") {
+  if (number[1] !== "9") {
     arr[i + 1]?.status === "free" || arr[i + 1]?.status === "freeze"
       ? (arr[i + 1].status = "freeze")
       : "";
@@ -407,25 +484,17 @@ const checkHorizontal = (number, arr, i) => {
 
 const arrangePlayer = (arr, arrBattle, ship) => () => {
   let j = 0;
-  debugger;
   arrBattle.forEach((item) => (item.className = "sea-battle__cell-player"));
-    for (key in ship) {
+  for (key in ship) {
     shipsPlayer[key] = false;
   }
-  arr.forEach((item) => (item.status = "free"))
-
-  j = 0;
+  arr.forEach((item) => (item.status = "free"));
   statusPlayer = "ready";
-
-  debugger;
-
   randomArrange(arr, ship);
-  debugger;
   arrBattle.map((item) => {
     item.classList.add(arr[j++].status);
   });
-  console.log(arrBattle);
-}
+};
 const arrange = (arr, arrBattle, ship) => () => {
   let y = 0;
   randomArrange(arr, ship);
@@ -526,7 +595,7 @@ function blockRepeat(e) {
 const blockAttack = (arr, index) => {
   index = String(index).length === 1 ? "0" + String(index) : index;
 
-  if (String(index).slice(1) === "9") {
+  if (String(index)[1] === "9") {
     index = +index;
     arr[index - 1] &&
     (arr[index - 1]?.status === "miss" || arr[index - 1]?.status === "freeze")
@@ -548,7 +617,7 @@ const blockAttack = (arr, index) => {
     arr[index - 10]?.status === "freeze"
       ? (arr[index - 10].status = "miss")
       : "";
-  } else if (String(index).slice(1) === "0") {
+  } else if (String(index)[1] === "0") {
     index = +index;
     (arr[index + 10] && arr[index + 10]?.status === "miss") ||
     arr[index + 10]?.status === "freeze"

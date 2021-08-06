@@ -2,11 +2,13 @@ const battlePlayer = document.querySelector(".container-player");
 const battleEnemy = document.querySelector(".container-enemy");
 const randomArrangeBtn = document.querySelector(".btnRandom");
 const start = document.querySelector(".btnStart");
-const enemyButton = document.querySelector(".btnEnemy");
+const blockContainer = document.querySelector(".block-container");
+const containerPlayerShip = document.querySelector(".container-player-ship");
 let counterPlayer = 0;
 let counterEnemy = 0;
 let turn = "player";
-let statusPlayer = "ready";
+let statusPlayer = "";
+
 const shipsPlayer = {
   oneShip1: false,
   oneShip2: false,
@@ -20,16 +22,7 @@ const shipsPlayer = {
   fourShip: false,
 };
 const shipsEnemy = {
-  oneShip1: false,
-  oneShip2: false,
-  oneShip3: false,
-  oneShip4: false,
-  twoShip1: false,
-  twoShip2: false,
-  twoShip3: false,
-  threeShip1: false,
-  threeShip1: false,
-  fourShip: false,
+  ...shipsPlayer,
 };
 
 const generatePlayerField = () => {
@@ -46,6 +39,13 @@ const generateEnemyField = () => {
     battleEnemy.append(div);
   }
 };
+// const generateContainerPlayerShip = () => {
+//   for (let i = 0; i < 100; i++) {
+//     let div = document.createElement("div");
+//     div.classList.add("sea-battle__cell-player-ship");
+//     containerPlayerShip.append(div);
+//   }
+// };
 generatePlayerField();
 let battlefieldPlayer = [];
 for (let i = 0; i < 100; i++) {
@@ -54,8 +54,13 @@ for (let i = 0; i < 100; i++) {
 generateEnemyField();
 const playerField = document.getElementsByClassName("sea-battle__cell-player");
 const playerFieldArray = Array.from(playerField);
+
 const enemyField = document.getElementsByClassName("sea-battle__cell-enemy");
 const enemyFieldArray = Array.from(enemyField);
+
+// const playerFieldShip = document.getElementsByClassName("sea-battle__cell-player-ship");
+// const playerFieldShipArray = Array.from(playerField);
+// generateContainerPlayerShip()
 
 let battlefieldEnemy = [];
 for (let i = 0; i < 100; i++) {
@@ -206,7 +211,6 @@ const randomArrange = (arr, ship) => {
   }
 };
 
-statusPlayer = "ready";
 const checkFourShip = (arr, i, number) => {
   if (number.slice(1) === "0") {
     arr[i + 1]?.status === "free" ? (arr[i + 1].status = "freeze") : "";
@@ -515,17 +519,14 @@ const createThreeShip = (direction, arr, number, ship) => {
 
 const arrange = (arr, arrBattle, ship) => () => {
   let j = 0;
+  statusPlayer = "ready";
   randomArrange(arr, ship);
 
   arrBattle.map((item) => {
     item.classList.add(arr[j++].status);
   });
 };
-const arrangeEnemy = (arr, arrBattle, ship) => () => {
-  let y = 0;
-  randomArrange(arr, ship);
-  arrBattle.map((item) => item.classList.add(arr[y++].status));
-};
+
 randomArrangeBtn.addEventListener(
   "click",
   arrange(battlefieldPlayer, playerFieldArray, shipsPlayer)
@@ -552,9 +553,11 @@ const firePlayer = (e) => {
   }
   checkMiss();
 };
-battleEnemy.addEventListener("click", firePlayer);
 
 const fireEnemy = () => {
+  if (turn !== "enemy") {
+    return;
+  }
   let randomIndex = Math.trunc(Math.random() * 100);
   playerFieldArray[randomIndex].click();
   if (
@@ -571,16 +574,12 @@ const fireEnemy = () => {
     turn = "player";
   } else if (battlefieldPlayer[randomIndex].status === "oneShip") {
     battlefieldPlayer[randomIndex].status = "crush";
-    fireEnemy();
   } else if (battlefieldPlayer[randomIndex].status === "part2Ship") {
     fireTwoShip(battlefieldPlayer, randomIndex);
-    fireEnemy();
   } else if (battlefieldPlayer[randomIndex].status === "part3Ship") {
     fireThreeShip(battlefieldPlayer, randomIndex);
-    fireEnemy();
   } else if (battlefieldPlayer[randomIndex].status === "part4Ship") {
     fireFourShip(battlefieldPlayer, randomIndex);
-    fireEnemy();
   }
   checkMissEnemy();
 };
@@ -709,10 +708,17 @@ function gameOver() {
     (item) => item.status === "crush"
   );
   let counterEnemy = battlefieldEnemy.filter((item) => item.status === "crush");
+
   if (counterPlayer.length === 20) {
+    battleEnemy.removeEventListener("click", firePlayer);
+    start.removeEventListener("click", startGame);
+    document.removeEventListener("click", turnFire);
     alert("Computer win");
   }
   if (counterEnemy.length === 20) {
+    battleEnemy.removeEventListener("click", firePlayer);
+    start.removeEventListener("click", startGame);
+    document.removeEventListener("click", turnFire);
     alert("Player win");
   }
 }
@@ -850,15 +856,20 @@ const fireFourShip = (arr, index) => {
     arr[index].status = "hit";
   }
 };
-document.addEventListener("click", gameOver);
-console.log(statusPlayer);
 
 const startGame = () => {
-  arrange(battlefieldEnemy, enemyFieldArray, shipsEnemy)();
+  battleEnemy.addEventListener("click", firePlayer);
+
   if (statusPlayer === "ready") {
-    if (turn === "enemy") {
-      fireEnemy();
-    }
+    arrange(battlefieldEnemy, enemyFieldArray, shipsEnemy)();
+    enemyFieldArray.forEach((item) => (item.style.backgroundColor = "white"));
+  }
+};
+const turnFire = () => {
+  if (turn === "enemy") {
+    setTimeout(fireEnemy, 400);
   }
 };
 start.addEventListener("click", startGame);
+document.addEventListener("click", turnFire);
+document.addEventListener("click", gameOver);

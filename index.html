@@ -2,35 +2,37 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sea battle</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
     <div class="battlefield__container">
-        <div>
+        <div class="battlefield__container-player_container player-container">
             <div class="container-player"></div>
-            <button class="btnRandom btn">Случайная расстановка</button>
+            <div class="container-player__button-container">
+                <button class="btnRandom btn">Случайная расстановка</button>
+                <button class="btnManual btn">Ручная расстановка</button>
+                <div class="showTurn btn">Очередь:</div>
+                <button class="btnStart btn" disabled>Старт</button>
+            </div>
         </div>
+        <div></div>
         <div>
             <div class="container-enemy">
                 <div class="block-container"></div>
             </div>
-            <button class="btnStart btn">Старт</button>
 
         </div>
         <div>
             <div class="container-player-ship">
-                
                 <!-- <div class=" oneShip4" draggable="true"></div> -->
             </div>
         </div>
-
     </div>
-
 </body>
 <script src="index.js"></script>
 

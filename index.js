@@ -1,10 +1,12 @@
 const battlePlayer = document.querySelector(".container-player");
 const battleEnemy = document.querySelector(".container-enemy");
 const randomArrangeBtn = document.querySelector(".btnRandom");
+const manualArrangeBtn = document.querySelector(".btnManual");
 const start = document.querySelector(".btnStart");
 const blockContainer = document.querySelector(".block-container");
 const containerPlayerShip = document.querySelector(".container-player-ship");
 const createOneShip4 = document.querySelector(".oneShip4");
+const showTurn = document.querySelector(".showTurn");
 let startFlag = false;
 let counterPlayer = 0;
 let counterEnemy = 0;
@@ -50,13 +52,59 @@ const generateContainerPlayerShip = () => {
       div.draggable = true;
       div.classList.add("oneShip");
     }
-
+    if (i === 8) {
+      div.draggable = true;
+      div.style.width = "120px";
+      div.style.height = "60px";
+      div.classList.add("part2Ship");
+    }
+    if (i === 10) {
+      div.draggable = true;
+      div.style.width = "120px";
+      div.style.height = "60px";
+      div.classList.add("part2Ship");
+    }
+    if (i === 12) {
+      div.draggable = true;
+      div.style.width = "120px";
+      div.style.height = "60px";
+      div.classList.add("part2Ship");
+    }
+    if (i === 14) {
+      div.draggable = true;
+      div.style.width = "180px";
+      div.style.height = "60px";
+      div.classList.add("part3Ship");
+    }
+    if (i === 32) {
+      div.draggable = true;
+      div.style.width = "180px";
+      div.style.height = "60px";
+      div.classList.add("part3Ship");
+    }
+    if (i === 26) {
+      div.draggable = true;
+      div.style.width = "240px";
+      div.style.height = "60px";
+      div.classList.add("part4Ship");
+    }
+    div.direction = 0;
     div.classList.add("sea-battle__cell-player-ship");
+    let widthH = div.style.width;
+    let widthV = div.style.height;
+    let heightH = div.style.height;
+    let heightV = div.style.width;
+    div.addEventListener("dblclick", () => {
+      div.direction = div.direction === 0 ? 1 : 0;
+
+      div.style.width = div.direction === 0 ? widthH : widthV;
+      div.style.height = div.direction === 0 ? heightH : heightV;
+    });
     containerPlayerShip.append(div);
   }
 };
 
-var dragged;
+let dragged;
 
 /* events fired on the draggable target */
 document.addEventListener("drag", function (event) {}, false);
@@ -64,9 +112,7 @@ document.addEventListener("drag", function (event) {}, false);
 document.addEventListener(
   "dragstart",
   function (event) {
-    // store a ref. on the dragged elem
     dragged = event.target;
-    // make it half transparent
     event.target.style.opacity = 0.5;
   },
   false
@@ -75,17 +121,14 @@ document.addEventListener(
 document.addEventListener(
   "dragend",
   function (event) {
-    // reset the transparency
     event.target.style.opacity = "";
   },
   false
 );
 
-/* events fired on the drop targets */
 document.addEventListener(
   "dragover",
   function (event) {
-    // prevent default to allow drop
     event.preventDefault();
   },
   false
@@ -94,9 +137,14 @@ document.addEventListener(
 document.addEventListener(
   "dragenter",
   function (event) {
-    // highlight potential drop target when the draggable element enters it
-    if (event.target.className == "sea-battle__cell-player") {
-    }
+    let index = playerFieldArray.indexOf(event.target);
+    console.log(index);
+
+    // if (dragged.classList.contains("part2Ship")) {
+    //   if ((dragged.direction = 0)) {
+    //     playerFieldArray[index].classList.add("highlight");
+    //   }
+    // }
   },
   false
 );
@@ -104,9 +152,8 @@ document.addEventListener(
 document.addEventListener(
   "dragleave",
   function (event) {
-    // reset background of potential drop target when the draggable element leaves it
-    if (event.target.className == "sea-battle__cell-player") {
-    }
+    let index = playerFieldArray.indexOf(event.target);
+    console.log(index);
   },
   false
 );
@@ -114,12 +161,397 @@ document.addEventListener(
 document.addEventListener(
   "drop",
   function (event) {
-    // prevent default action (open as link for some elements)
     event.preventDefault();
-    // move dragged elem to the selected drop target
-    if (event.target.className == "sea-battle__cell-player") {
-      event.target.classList.add("oneShip");
+    if (event.target.classList.contains("sea-battle__cell-player")) {
+      let target = event.target;
+
+      let currentIndexField = playerFieldArray.indexOf(target);
+      if (battlefieldPlayer[currentIndexField].status !== "free") {
+        return;
+      }
+      if (dragged.classList.contains("oneShip")) {
+        battlefieldPlayer[currentIndexField].status = "oneShip";
+        checkRandomArrangeShip(
+          battlefieldPlayer,
+          currentIndexField,
+          String(currentIndexField)
+        );
+      }
+      if (dragged.direction === 0) {
+        if (dragged.classList.contains("part2Ship")) {
+          if (String(currentIndexField)[1] === "9") {
+            if (battlefieldPlayer[currentIndexField - 1].status === "free") {
+              battlefieldPlayer[currentIndexField].status = "part2Ship";
+              battlefieldPlayer[currentIndexField - 1].status = "part2Ship";
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField,
+                String(currentIndexField)
+              );
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField - 1,
+                String(currentIndexField - 1)
+              );
+            } else {
+              return;
+            }
+          } else {
+            if (battlefieldPlayer[currentIndexField + 1].status === "free") {
+              battlefieldPlayer[currentIndexField].status = "part2Ship";
+              battlefieldPlayer[currentIndexField + 1].status = "part2Ship";
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField,
+                String(currentIndexField)
+              );
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField + 1,
+                String(currentIndexField + 1)
+              );
+            } else {
+              return;
+            }
+          }
+        }
+        if (dragged.classList.contains("part3Ship")) {
+          if (
+            String(currentIndexField)[1] === "8" ||
+            String(currentIndexField)[1] === "9"
+          ) {
+            if (
+              battlefieldPlayer[currentIndexField - 1].status === "free" &&
+              battlefieldPlayer[currentIndexField - 2].status === "free"
+            ) {
+              battlefieldPlayer[currentIndexField].status = "part3Ship";
+              battlefieldPlayer[currentIndexField - 1].status = "part3Ship";
+              battlefieldPlayer[currentIndexField - 2].status = "part3Ship";
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField,
+                String(currentIndexField)
+              );
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField - 1,
+                String(currentIndexField - 1)
+              );
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField - 2,
+                String(currentIndexField - 2)
+              );
+            } else {
+              return;
+            }
+          } else {
+            if (
+              battlefieldPlayer[currentIndexField + 1].status === "free" &&
+              battlefieldPlayer[currentIndexField + 2].status === "free"
+            ) {
+              battlefieldPlayer[currentIndexField].status = "part3Ship";
+              battlefieldPlayer[currentIndexField + 1].status = "part3Ship";
+              battlefieldPlayer[currentIndexField + 2].status = "part3Ship";
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField,
+                String(currentIndexField)
+              );
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField + 1,
+                String(currentIndexField + 1)
+              );
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField + 2,
+                String(currentIndexField + 2)
+              );
+            } else {
+              return;
+            }
+          }
+        }
+        if (dragged.classList.contains("part4Ship")) {
+          if (
+            String(currentIndexField)[1] === "7" ||
+            String(currentIndexField)[1] === "8" ||
+            String(currentIndexField)[1] === "9"
+          ) {
+            if (
+              battlefieldPlayer[currentIndexField - 1].status === "free" &&
+              battlefieldPlayer[currentIndexField - 2].status === "free" &&
+              battlefieldPlayer[currentIndexField - 3].status === "free"
+            ) {
+              battlefieldPlayer[currentIndexField].status = "part4Ship";
+              battlefieldPlayer[currentIndexField - 1].status = "part4Ship";
+              battlefieldPlayer[currentIndexField - 2].status = "part4Ship";
+              battlefieldPlayer[currentIndexField - 3].status = "part4Ship";
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField,
+                String(currentIndexField)
+              );
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField - 1,
+                String(currentIndexField - 1)
+              );
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField - 2,
+                String(currentIndexField - 2)
+              );
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField - 3,
+                String(currentIndexField - 3)
+              );
+            } else {
+              return;
+            }
+          } else {
+            if (
+              battlefieldPlayer[currentIndexField + 1].status === "free" &&
+              battlefieldPlayer[currentIndexField + 2].status === "free" &&
+              battlefieldPlayer[currentIndexField + 3].status === "free"
+            ) {
+              battlefieldPlayer[currentIndexField].status = "part4Ship";
+              battlefieldPlayer[currentIndexField + 1].status = "part4Ship";
+              battlefieldPlayer[currentIndexField + 2].status = "part4Ship";
+              battlefieldPlayer[currentIndexField + 3].status = "part4Ship";
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField,
+                String(currentIndexField)
+              );
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField + 1,
+                String(currentIndexField + 1)
+              );
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField + 2,
+                String(currentIndexField + 2)
+              );
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField + 3,
+                String(currentIndexField + 3)
+              );
+            } else {
+              return;
+            }
+          }
+        }
+      } else {
+        if (dragged.classList.contains("part2Ship")) {
+          if (
+            String(currentIndexField).length !== 1 &&
+            String(currentIndexField)[0] === "9"
+          ) {
+            if (battlefieldPlayer[currentIndexField - 10].status === "free") {
+              battlefieldPlayer[currentIndexField].status = "part2Ship";
+              battlefieldPlayer[currentIndexField - 10].status = "part2Ship";
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField,
+                String(currentIndexField)
+              );
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField - 10,
+                String(currentIndexField - 10)
+              );
+            } else {
+              return;
+            }
+          } else {
+            if (battlefieldPlayer[currentIndexField + 10].status === "free") {
+              battlefieldPlayer[currentIndexField].status = "part2Ship";
+              battlefieldPlayer[currentIndexField + 10].status = "part2Ship";
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField,
+                String(currentIndexField)
+              );
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField + 10,
+                String(currentIndexField + 10)
+              );
+            } else {
+              return;
+            }
+          }
+        }
+        if (dragged.classList.contains("part3Ship")) {
+          currentIndexField =
+            String(currentIndexField).length === 2
+              ? currentIndexField
+              : "0" + currentIndexField;
+          if (
+            String(currentIndexField)[0] === "8" ||
+            String(currentIndexField)[0] === "9"
+          ) {
+            currentIndexField = +currentIndexField;
+            if (
+              battlefieldPlayer[currentIndexField - 10].status === "free" &&
+              battlefieldPlayer[currentIndexField - 20].status === "free"
+            ) {
+              battlefieldPlayer[currentIndexField].status = "part3Ship";
+              battlefieldPlayer[currentIndexField - 10].status = "part3Ship";
+              battlefieldPlayer[currentIndexField - 20].status = "part3Ship";
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField,
+                String(currentIndexField)
+              );
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField - 10,
+                String(currentIndexField - 10)
+              );
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField - 20,
+                String(currentIndexField - 20)
+              );
+            } else {
+              return;
+            }
+          } else {
+            currentIndexField = +currentIndexField;
+            if (
+              battlefieldPlayer[currentIndexField + 10].status === "free" &&
+              battlefieldPlayer[currentIndexField + 20].status === "free"
+            ) {
+              battlefieldPlayer[currentIndexField].status = "part3Ship";
+              battlefieldPlayer[currentIndexField + 10].status = "part3Ship";
+              battlefieldPlayer[currentIndexField + 20].status = "part3Ship";
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField,
+                String(currentIndexField)
+              );
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField + 10,
+                String(currentIndexField + 10)
+              );
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField + 20,
+                String(currentIndexField + 20)
+              );
+            } else {
+              return;
+            }
+          }
+        }
+        if (dragged.classList.contains("part4Ship")) {
+          if (
+            String(currentIndexField).length !== 1 &&
+            (String(currentIndexField)[0] === "7" ||
+              String(currentIndexField)[0] === "8" ||
+              String(currentIndexField)[0] === "9")
+          ) {
+            if (
+              battlefieldPlayer[currentIndexField - 10].status === "free" &&
+              battlefieldPlayer[currentIndexField - 20].status === "free" &&
+              battlefieldPlayer[currentIndexField - 30].status === "free"
+            ) {
+              battlefieldPlayer[currentIndexField].status = "part4Ship";
+              battlefieldPlayer[currentIndexField - 10].status = "part4Ship";
+              battlefieldPlayer[currentIndexField - 20].status = "part4Ship";
+              battlefieldPlayer[currentIndexField - 30].status = "part4Ship";
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField,
+                String(currentIndexField)
+              );
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField - 10,
+                String(currentIndexField - 10)
+              );
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField - 20,
+                String(currentIndexField - 20)
+              );
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField - 30,
+                String(currentIndexField - 30)
+              );
+            } else {
+              return;
+            }
+          } else {
+            if (
+              battlefieldPlayer[currentIndexField + 10].status === "free" &&
+              battlefieldPlayer[currentIndexField + 20].status === "free" &&
+              battlefieldPlayer[currentIndexField + 30].status === "free"
+            ) {
+              battlefieldPlayer[currentIndexField].status = "part4Ship";
+              battlefieldPlayer[currentIndexField + 10].status = "part4Ship";
+              battlefieldPlayer[currentIndexField + 20].status = "part4Ship";
+              battlefieldPlayer[currentIndexField + 30].status = "part4Ship";
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField,
+                String(currentIndexField)
+              );
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField + 10,
+                String(currentIndexField + 10)
+              );
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField + 20,
+                String(currentIndexField + 20)
+              );
+              checkRandomArrangeShip(
+                battlefieldPlayer,
+                currentIndexField + 30,
+                String(currentIndexField + 30)
+              );
+            } else {
+              return;
+            }
+          }
+        }
+      }
+
+      dragged.classList = "sea-battle__cell-player-ship";
+      dragged.parentNode.appendChild(dragged);
       dragged.parentNode.removeChild(dragged);
+
+      let y = 0;
+      playerFieldArray.forEach((item) => {
+        item.classList.add(battlefieldPlayer[y++].status);
+      });
+
+      statusPlayer =
+        battlefieldPlayer.filter(
+          (item) =>
+            item.status === "oneShip" ||
+            item.status === "part2Ship" ||
+            item.status === "part3Ship" ||
+            item.status === "part4Ship"
+        ).length === 20
+          ? "ready"
+          : "";
+      if (statusPlayer === "ready") {
+        start.disabled = false;
+      } else {
+        start.disabled = true;
+      }
+      y = 0;
       event.target = dragged;
     }
   },
@@ -134,12 +566,22 @@ const battlefieldEnemy = [];
 for (let i = 0; i < 100; i++) {
   battlefieldEnemy.push({ status: "free" });
 }
-
+generateContainerPlayerShip();
 const playerField = document.getElementsByClassName("sea-battle__cell-player");
 const playerFieldArray = Array.from(playerField);
 
 const enemyField = document.getElementsByClassName("sea-battle__cell-enemy");
 const enemyFieldArray = Array.from(enemyField);
+
+const manuallyArrange = () => {
+  containerPlayerShip.style.opacity = 1;
+  playerFieldArray.forEach(
+    (item) => (item.className = "sea-battle__cell-player")
+  );
+  battlefieldPlayer.forEach((item) => (item.status = "free"));
+  statusPlayer = "";
+};
+manualArrangeBtn.addEventListener("click", manuallyArrange);
 
 const playerFieldShip = document.getElementsByClassName(
   "sea-battle__cell-player-ship"
@@ -147,7 +589,7 @@ const playerFieldShip = document.getElementsByClassName(
 const playerFieldShipArray = Array.from(playerField);
 const oneShip1 = document.createElement("div");
 oneShip1.className = "oneShip";
-generateContainerPlayerShip();
+
 playerFieldShipArray[0] = oneShip1;
 
 const randomArrange = (arr, ship) => {
@@ -249,9 +691,9 @@ const randomArrange = (arr, ship) => {
     ship.oneShip4 = true;
   }
 };
-const manuallyArrange = () => {};
 
 const checkRandomArrangeShip = (arr, i, number) => {
+  number = number.length === 2 ? number : "0" + number;
   if (number[1] === "0") {
     arr[i + 1]?.status === "free" ? (arr[i + 1].status = "freeze") : "";
     arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
@@ -275,6 +717,7 @@ const checkRandomArrangeShip = (arr, i, number) => {
     arr[i + 10]?.status === "free" ? (arr[i + 10].status = "freeze") : "";
   }
 };
+
 const createOneShip = (direction, arr, number, ship) => {
   if (number.slice(1) === "9") {
     if (arr[+number].status === "free") {
@@ -483,6 +926,7 @@ const checkHorizontal = (number, arr, i) => {
 };
 
 const arrangePlayer = (arr, arrBattle, ship) => () => {
+  containerPlayerShip.style.opacity = 0;
   let j = 0;
   arrBattle.forEach((item) => (item.className = "sea-battle__cell-player"));
   for (key in ship) {
@@ -495,7 +939,7 @@ const arrangePlayer = (arr, arrBattle, ship) => () => {
     item.classList.add(arr[j++].status);
   });
 };
-const arrange = (arr, arrBattle, ship) => () => {
+const arrangeEnemy = (arr, arrBattle, ship) => () => {
   let y = 0;
   randomArrange(arr, ship);
   arrBattle.forEach((item) => {
@@ -518,6 +962,7 @@ const firePlayer = (e) => {
   ) {
     battlefieldEnemy[currentIndexArr].status = "miss";
     turn = "enemy";
+    showTurn.innerHTML = turn;
   } else if (battlefieldEnemy[currentIndexArr].status === "oneShip") {
     battlefieldEnemy[currentIndexArr].status = "crush";
   } else if (battlefieldEnemy[currentIndexArr].status === "part2Ship") {
@@ -548,6 +993,7 @@ const fireEnemy = () => {
   ) {
     battlefieldPlayer[randomIndex].status = "miss";
     turn = "player";
+    showTurn.innerHTML = turn;
   } else if (battlefieldPlayer[randomIndex].status === "oneShip") {
     battlefieldPlayer[randomIndex].status = "crush";
   } else if (battlefieldPlayer[randomIndex].status === "part2Ship") {
@@ -838,9 +1284,10 @@ const startGame = () => {
   battleEnemy.addEventListener("click", firePlayer);
 
   if (statusPlayer === "ready") {
-    arrange(battlefieldEnemy, enemyFieldArray, shipsEnemy)();
+    arrangeEnemy(battlefieldEnemy, enemyFieldArray, shipsEnemy)();
     enemyFieldArray.forEach((item) => item.classList.add("white"));
     startFlag = true;
+
     startFlag === true
       ? (randomArrangeBtn.disabled = true)
       : (randomArrangeBtn.disabled = false);
@@ -851,7 +1298,16 @@ const turnFire = () => {
     setTimeout(fireEnemy, 400);
   }
 };
+
 document.addEventListener("click", blockRepeat, true);
 start.addEventListener("click", startGame);
+document.addEventListener("click", () => {
+  if (statusPlayer === "ready") {
+    start.disabled = false;
+  } else {
+    start.disabled = true;
+  }
+});
 document.addEventListener("click", turnFire);
 document.addEventListener("click", gameOver);
+document.addEventListener("drop", () => {});

@@ -16,6 +16,7 @@
   color: aliceblue;
   font-size: 18px;
   margin-left: 50px;
+  margin-bottom: 10px;
 }
 .btn:disabled {
   background-color: rgb(163, 163, 163);
@@ -24,10 +25,16 @@
 .sea-battle__cell-player,
 .sea-battle__cell-enemy,
 .sea-battle__cell-player-ship {
-  width: 9%;
-  height: 9%;
+  width: 9.6%;
+  height: 9.6%;
   border: 1px solid black;
   text-align: center;
+}
+.sea-battle__cell-player-ship {
+  width: 60px;
+  height: 60px;
+  border: none;
+  margin: 5px;
 }
 .container-player,
 .container-enemy {
@@ -36,6 +43,13 @@
   width: 600px;
   height: 600px;
   flex-flow: row wrap;
+}
+.container-player-ship {
+  opacity: 0;
+}
+.highlight {
+  background-color: cadetblue;
+  opacity: 0.5;
 }
 
 .oneShip {
@@ -66,7 +80,14 @@
 .crush {
   background: black;
 }
-
+.player-container {
+  display: flex;
+  flex-flow: row;
+}
+.container-player__button-container {
+  display: flex;
+  flex-direction: column;
+}
 .block-container {
   position: absolute;
   width: 100%;
@@ -77,9 +98,10 @@
 }
 .container-player-ship {
   display: flex;
-  width: 800px;
-  height: 800px;
+  width: 1600px;
+  height: 600px;
   flex-flow: row wrap;
+  margin-top: 30px;
 }
 .threeShip {
   width: 100%;
@@ -88,4 +110,9 @@
 .oneShip1 {
   width: 100%;
   height: 50px;
+}
+.showTurn {
+  background-color: azure;
+  color: black;
+  line-height: 80px;
 }

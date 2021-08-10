@@ -1,12 +1,13 @@
 * {
   margin: 0;
   padding: 0;
+  user-select: none;
 }
 .battlefield__container {
   display: flex;
   width: 100%;
   flex-flow: row wrap;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
 .btn {
@@ -17,6 +18,9 @@
   font-size: 18px;
   margin-left: 50px;
   margin-bottom: 10px;
+}
+.btn:active {
+  background-color: rgb(4, 4, 179);
 }
 .btn:disabled {
   background-color: rgb(163, 163, 163);
@@ -34,7 +38,7 @@
   width: 60px;
   height: 60px;
   border: none;
-  margin: 5px;
+  margin: 10px;
 }
 .container-player,
 .container-enemy {
@@ -46,10 +50,6 @@
 }
 .container-player-ship {
   opacity: 0;
-}
-.highlight {
-  background-color: cadetblue;
-  opacity: 0.5;
 }
 
 .oneShip {
@@ -63,9 +63,6 @@
 }
 .part4Ship {
   background-color: hotpink;
-}
-.freeze {
-  background: rgb(255, 255, 255);
 }
 
 .white {
@@ -97,6 +94,7 @@
   display: none;
 }
 .container-player-ship {
+  margin-left: 25px;
   display: flex;
   width: 1600px;
   height: 600px;
@@ -115,4 +113,5 @@
   background-color: azure;
   color: black;
   line-height: 80px;
+  text-align: center;
 }

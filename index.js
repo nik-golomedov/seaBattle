@@ -841,28 +841,40 @@ const fireEnemy = () => {
   switch (battlefieldPlayer[randomIndex].status) {
     case "miss":
     case "hit":
-    case "crush": {
-      fireEnemy();
-    }break;
+    case "crush":
+      {
+        fireEnemy();
+      }
+      break;
     case "freeze":
-      case "free": {
+    case "free":
+      {
         battlefieldPlayer[randomIndex].status = "miss";
         turn = "Игрок";
         showTurn.innerHTML = turn;
         battleEnemy.addEventListener("click", firePlayer);
-      } break;
-      case "oneShip": {
+      }
+      break;
+    case "oneShip":
+      {
         battlefieldPlayer[randomIndex].status = "crush";
-      }break;
-      case "part2Ship": {
+      }
+      break;
+    case "part2Ship":
+      {
         fireTwoShip(battlefieldPlayer, randomIndex);
-      } break;
-      case "part3Ship": {
+      }
+      break;
+    case "part3Ship":
+      {
         fireThreeShip(battlefieldPlayer, randomIndex);
-      } break;
-      case "part4Ship": {
+      }
+      break;
+    case "part4Ship":
+      {
         fireFourShip(battlefieldPlayer, randomIndex);
-      } break;
+      }
+      break;
   }
   checkMissEnemy();
 };

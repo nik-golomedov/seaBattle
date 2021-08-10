@@ -85,14 +85,6 @@
   display: flex;
   flex-direction: column;
 }
-.block-container {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  background-color: aquamarine;
-  display: none;
-}
 .container-player-ship {
   margin-left: 25px;
   display: flex;
@@ -100,14 +92,6 @@
   height: 600px;
   flex-flow: row wrap;
   margin-top: 30px;
-}
-.threeShip {
-  width: 100%;
-  height: 200px;
-}
-.oneShip1 {
-  width: 100%;
-  height: 50px;
 }
 .showTurn {
   background-color: azure;

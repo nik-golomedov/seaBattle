@@ -12,37 +12,33 @@ let counterEnemy = 0;
 let turn = "Игрок";
 let statusPlayer = "";
 const shipsPlayer = {
-  oneShip1: false,
-  oneShip2: false,
-  oneShip3: false,
-  oneShip4: false,
-  twoShip1: false,
-  twoShip2: false,
-  twoShip3: false,
-  threeShip1: false,
-  threeShip1: false,
-  fourShip: false,
+  oneShip1: null,
+  oneShip2: null,
+  oneShip3: null,
+  oneShip4: null,
+  twoShip1: null,
+  twoShip2: null,
+  twoShip3: null,
+  threeShip1: null,
+  threeShip1: null,
+  fourShip: null,
 };
 const shipsEnemy = {
   ...shipsPlayer,
 };
 
-const generatePlayerField = () => {
+const generateField = (battleField, cellClass) => {
   for (let i = 0; i < 100; i++) {
     let div = document.createElement("div");
-    div.classList.add("sea-battle__cell-player");
-    battlePlayer.append(div);
+    div.classList.add(`sea-battle__cell-${cellClass}`);
+    battleField.append(div);
   }
 };
-generatePlayerField();
-const generateEnemyField = () => {
-  for (let i = 0; i < 100; i++) {
-    let div = document.createElement("div");
-    div.classList.add("sea-battle__cell-enemy");
-    battleEnemy.append(div);
-  }
-};
-generateEnemyField();
+
+generateField(battlePlayer, "player");
+
+generateField(battleEnemy, "enemy");
+
 const generateContainerPlayerShip = () => {
   for (let i = 0; i < 10; i++) {
     let div = document.createElement("div");
@@ -101,310 +97,234 @@ const generateContainerPlayerShip = () => {
 };
 
 let dragged;
-const drag = (event) => {};
+
 const dragStart = (event) => {
   dragged = event.target;
   event.target.style.opacity = 0.5;
 };
+
 const dragEnd = (event) => {
   dragged = event.target;
   event.target.style.opacity = 1;
 };
+
 const dragOver = (event) => {
   event.preventDefault();
 };
-const dragEnter = (event) => {};
-const dragLeave = (event) => {};
-document.addEventListener("drag", drag, false);
 
 document.addEventListener("dragstart", dragStart, false);
 
 document.addEventListener("dragend", dragEnd, false);
 
 document.addEventListener("dragover", dragOver, false);
-document.addEventListener("dragenter", dragEnter, false);
-document.addEventListener("dragleave", dragLeave, false);
+
+const checkDropShip = (index, n, ship, directionCoeff) => {
+  let isCellsFreeForShip = true;
+
+  for (let i = 1; i < n; i++) {
+    if (battlefieldPlayer[index + i * directionCoeff].status !== "free")
+      isCellsFreeForShip = false;
+  }
+  if (isCellsFreeForShip) {
+    for (let i = 0; i < n; i++) {
+      battlefieldPlayer[index + i * directionCoeff].status = ship;
+      checkRandomArrangeShip(
+        battlefieldPlayer,
+        index + i * directionCoeff,
+        String(index + i * directionCoeff)
+      );
+    }
+    return true;
+  }
+  return false;
+};
 
 const dropShip = (event) => {
   event.preventDefault();
 
-  if (event.target.classList.contains("sea-battle__cell-player")) {
-    let target = event.target;
-
-    let currentIndexField = playerFieldArray.indexOf(target);
-    if (battlefieldPlayer[currentIndexField].status !== "free") {
-      return;
-    }
-    if (dragged.classList.contains("oneShip")) {
-      battlefieldPlayer[currentIndexField].status = "oneShip";
-      checkRandomArrangeShip(
-        battlefieldPlayer,
-        currentIndexField,
-        String(currentIndexField)
-      );
-    }
-    if (dragged.direction === 0) {
-      if (dragged.classList.contains("part2Ship")) {
-        currentIndexField =
-          String(currentIndexField).length === 2
-            ? currentIndexField
-            : "0" + currentIndexField;
-        if (String(currentIndexField)[1] === "9") {
-          return;
-        } else {
-          currentIndexField = +currentIndexField;
-          if (battlefieldPlayer[currentIndexField + 1].status === "free") {
-            battlefieldPlayer[currentIndexField].status = "part2Ship";
-            battlefieldPlayer[currentIndexField + 1].status = "part2Ship";
-            checkRandomArrangeShip(
-              battlefieldPlayer,
-              currentIndexField,
-              String(currentIndexField)
-            );
-            checkRandomArrangeShip(
-              battlefieldPlayer,
-              currentIndexField + 1,
-              String(currentIndexField + 1)
-            );
-          } else {
-            return;
-          }
-        }
-      }
-      if (dragged.classList.contains("part3Ship")) {
-        currentIndexField =
-          String(currentIndexField).length === 2
-            ? currentIndexField
-            : "0" + currentIndexField;
-        if (
-          String(currentIndexField)[1] === "8" ||
-          String(currentIndexField)[1] === "9"
-        ) {
-          return;
-        } else {
-          currentIndexField = +currentIndexField;
-          if (
-            battlefieldPlayer[currentIndexField + 1].status === "free" &&
-            battlefieldPlayer[currentIndexField + 2].status === "free"
-          ) {
-            battlefieldPlayer[currentIndexField].status = "part3Ship";
-            battlefieldPlayer[currentIndexField + 1].status = "part3Ship";
-            battlefieldPlayer[currentIndexField + 2].status = "part3Ship";
-            checkRandomArrangeShip(
-              battlefieldPlayer,
-              currentIndexField,
-              String(currentIndexField)
-            );
-            checkRandomArrangeShip(
-              battlefieldPlayer,
-              currentIndexField + 1,
-              String(currentIndexField + 1)
-            );
-            checkRandomArrangeShip(
-              battlefieldPlayer,
-              currentIndexField + 2,
-              String(currentIndexField + 2)
-            );
-          } else {
-            return;
-          }
-        }
-      }
-      if (dragged.classList.contains("part4Ship")) {
-        currentIndexField =
-          String(currentIndexField).length === 2
-            ? currentIndexField
-            : "0" + currentIndexField;
-        if (
-          String(currentIndexField)[1] === "7" ||
-          String(currentIndexField)[1] === "8" ||
-          String(currentIndexField)[1] === "9"
-        ) {
-          return;
-        } else {
-          currentIndexField = +currentIndexField;
-          if (
-            battlefieldPlayer[currentIndexField + 1].status === "free" &&
-            battlefieldPlayer[currentIndexField + 2].status === "free" &&
-            battlefieldPlayer[currentIndexField + 3].status === "free"
-          ) {
-            battlefieldPlayer[currentIndexField].status = "part4Ship";
-            battlefieldPlayer[currentIndexField + 1].status = "part4Ship";
-            battlefieldPlayer[currentIndexField + 2].status = "part4Ship";
-            battlefieldPlayer[currentIndexField + 3].status = "part4Ship";
-            checkRandomArrangeShip(
-              battlefieldPlayer,
-              currentIndexField,
-              String(currentIndexField)
-            );
-            checkRandomArrangeShip(
-              battlefieldPlayer,
-              currentIndexField + 1,
-              String(currentIndexField + 1)
-            );
-            checkRandomArrangeShip(
-              battlefieldPlayer,
-              currentIndexField + 2,
-              String(currentIndexField + 2)
-            );
-            checkRandomArrangeShip(
-              battlefieldPlayer,
-              currentIndexField + 3,
-              String(currentIndexField + 3)
-            );
-          } else {
-            return;
-          }
-        }
-      }
-    } else {
-      if (dragged.classList.contains("part2Ship")) {
-        if (
-          String(currentIndexField).length !== 1 &&
-          String(currentIndexField)[0] === "9"
-        ) {
-          return;
-        } else {
-          if (battlefieldPlayer[currentIndexField + 10].status === "free") {
-            battlefieldPlayer[currentIndexField].status = "part2Ship";
-            battlefieldPlayer[currentIndexField + 10].status = "part2Ship";
-            checkRandomArrangeShip(
-              battlefieldPlayer,
-              currentIndexField,
-              String(currentIndexField)
-            );
-            checkRandomArrangeShip(
-              battlefieldPlayer,
-              currentIndexField + 10,
-              String(currentIndexField + 10)
-            );
-          } else {
-            return;
-          }
-        }
-      }
-      if (dragged.classList.contains("part3Ship")) {
-        currentIndexField =
-          String(currentIndexField).length === 2
-            ? currentIndexField
-            : "0" + currentIndexField;
-        if (
-          String(currentIndexField)[0] === "8" ||
-          String(currentIndexField)[0] === "9"
-        ) {
-          return;
-        } else {
-          currentIndexField = +currentIndexField;
-          if (
-            battlefieldPlayer[currentIndexField + 10].status === "free" &&
-            battlefieldPlayer[currentIndexField + 20].status === "free"
-          ) {
-            battlefieldPlayer[currentIndexField].status = "part3Ship";
-            battlefieldPlayer[currentIndexField + 10].status = "part3Ship";
-            battlefieldPlayer[currentIndexField + 20].status = "part3Ship";
-            checkRandomArrangeShip(
-              battlefieldPlayer,
-              currentIndexField,
-              String(currentIndexField)
-            );
-            checkRandomArrangeShip(
-              battlefieldPlayer,
-              currentIndexField + 10,
-              String(currentIndexField + 10)
-            );
-            checkRandomArrangeShip(
-              battlefieldPlayer,
-              currentIndexField + 20,
-              String(currentIndexField + 20)
-            );
-          } else {
-            return;
-          }
-        }
-      }
-      if (dragged.classList.contains("part4Ship")) {
-        if (
-          String(currentIndexField).length !== 1 &&
-          (String(currentIndexField)[0] === "7" ||
-            String(currentIndexField)[0] === "8" ||
-            String(currentIndexField)[0] === "9")
-        ) {
-          return;
-        } else {
-          if (
-            battlefieldPlayer[currentIndexField + 10].status === "free" &&
-            battlefieldPlayer[currentIndexField + 20].status === "free" &&
-            battlefieldPlayer[currentIndexField + 30].status === "free"
-          ) {
-            battlefieldPlayer[currentIndexField].status = "part4Ship";
-            battlefieldPlayer[currentIndexField + 10].status = "part4Ship";
-            battlefieldPlayer[currentIndexField + 20].status = "part4Ship";
-            battlefieldPlayer[currentIndexField + 30].status = "part4Ship";
-            checkRandomArrangeShip(
-              battlefieldPlayer,
-              currentIndexField,
-              String(currentIndexField)
-            );
-            checkRandomArrangeShip(
-              battlefieldPlayer,
-              currentIndexField + 10,
-              String(currentIndexField + 10)
-            );
-            checkRandomArrangeShip(
-              battlefieldPlayer,
-              currentIndexField + 20,
-              String(currentIndexField + 20)
-            );
-            checkRandomArrangeShip(
-              battlefieldPlayer,
-              currentIndexField + 30,
-              String(currentIndexField + 30)
-            );
-          } else {
-            return;
-          }
-        }
-      }
-    }
-    dragged.draggable = false;
-    dragged.remove();
-
-    let y = 0;
-    playerFieldArray.forEach((item) => {
-      item.classList.add(battlefieldPlayer[y++].status);
-    });
-
-    statusPlayer =
-      battlefieldPlayer.filter(
-        (item) =>
-          item.status === "oneShip" ||
-          item.status === "part2Ship" ||
-          item.status === "part3Ship" ||
-          item.status === "part4Ship"
-      ).length === 20
-        ? "ready"
-        : "";
-    if (statusPlayer === "ready") {
-      start.disabled = false;
-      manualArrangeBtn.innerHTML = "Расстановка завершена";
-      manualArrangeBtn.disabled = true;
-    } else {
-      start.disabled = true;
-    }
-    y = 0;
-    event.target = dragged;
-  } else {
+  if (!event.target.classList.contains("sea-battle__cell-player")) {
     return;
   }
+  let target = event.target;
+
+  let currentIndexField = playerFieldArray.indexOf(target);
+  if (battlefieldPlayer[currentIndexField].status !== "free") {
+    return;
+  }
+  if (dragged.classList.contains("oneShip")) {
+    battlefieldPlayer[currentIndexField].status = "oneShip";
+    checkRandomArrangeShip(
+      battlefieldPlayer,
+      currentIndexField,
+      String(currentIndexField)
+    );
+  }
+  if (dragged.direction === 0) {
+    if (dragged.classList.contains("part2Ship")) {
+      currentIndexField =
+        String(currentIndexField).length === 2
+          ? currentIndexField
+          : "0" + currentIndexField;
+      if (String(currentIndexField)[1] === "9") {
+        return;
+      } else {
+        currentIndexField = +currentIndexField;
+        const checkDropTwoHor = checkDropShip(
+          currentIndexField,
+          2,
+          "part2Ship",
+          1
+        );
+        if (!checkDropTwoHor) {
+          return;
+        }
+      }
+    }
+    if (dragged.classList.contains("part3Ship")) {
+      currentIndexField =
+        String(currentIndexField).length === 2
+          ? currentIndexField
+          : "0" + currentIndexField;
+      if (
+        String(currentIndexField)[1] === "8" ||
+        String(currentIndexField)[1] === "9"
+      ) {
+        return;
+      } else {
+        currentIndexField = +currentIndexField;
+        const checkDropThreeHor = checkDropShip(
+          currentIndexField,
+          3,
+          "part3Ship",
+          1
+        );
+        if (!checkDropThreeHor) {
+          return;
+        }
+      }
+    }
+    if (dragged.classList.contains("part4Ship")) {
+      currentIndexField =
+        String(currentIndexField).length === 2
+          ? currentIndexField
+          : "0" + currentIndexField;
+      if (
+        String(currentIndexField)[1] === "7" ||
+        String(currentIndexField)[1] === "8" ||
+        String(currentIndexField)[1] === "9"
+      ) {
+        return;
+      } else {
+        currentIndexField = +currentIndexField;
+        const checkDropFourHor = checkDropShip(
+          currentIndexField,
+          4,
+          "part4Ship",
+          1
+        );
+        if (!checkDropFourHor) {
+          return;
+        }
+      }
+    }
+  } else {
+    if (dragged.classList.contains("part2Ship")) {
+      if (
+        String(currentIndexField).length !== 1 &&
+        String(currentIndexField)[0] === "9"
+      ) {
+        return;
+      } else {
+        const checkDropTwoVer = checkDropShip(
+          currentIndexField,
+          2,
+          "part2Ship",
+          10
+        );
+        if (!checkDropTwoVer) {
+          return;
+        }
+      }
+    }
+    if (dragged.classList.contains("part3Ship")) {
+      currentIndexField =
+        String(currentIndexField).length === 2
+          ? currentIndexField
+          : "0" + currentIndexField;
+      if (
+        String(currentIndexField)[0] === "8" ||
+        String(currentIndexField)[0] === "9"
+      ) {
+        return;
+      } else {
+        currentIndexField = +currentIndexField;
+        const checkDropThreeVer = checkDropShip(
+          currentIndexField,
+          3,
+          "part3Ship",
+          10
+        );
+        if (!checkDropThreeVer) {
+          return;
+        }
+      }
+    }
+    if (dragged.classList.contains("part4Ship")) {
+      if (
+        String(currentIndexField).length !== 1 &&
+        (String(currentIndexField)[0] === "7" ||
+          String(currentIndexField)[0] === "8" ||
+          String(currentIndexField)[0] === "9")
+      ) {
+        return;
+      } else {
+        const checkDropFourVer = checkDropShip(
+          currentIndexField,
+          4,
+          "part4Ship",
+          10
+        );
+        if (!checkDropFourVer) {
+          return;
+        }
+      }
+    }
+  }
+  dragged.draggable = false;
+  dragged.remove();
+
+  let y = 0;
+  playerFieldArray.forEach((item) => {
+    item.classList.add(battlefieldPlayer[y++].status);
+  });
+
+  statusPlayer =
+    battlefieldPlayer.filter(
+      (item) =>
+        item.status === "oneShip" ||
+        item.status === "part2Ship" ||
+        item.status === "part3Ship" ||
+        item.status === "part4Ship"
+    ).length === 20
+      ? "ready"
+      : null;
+  if (statusPlayer === "ready") {
+    start.disabled = false;
+    manualArrangeBtn.innerHTML = "Расстановка завершена";
+    manualArrangeBtn.disabled = true;
+  } else {
+    start.disabled = true;
+  }
+  y = 0;
+  event.target = dragged;
 };
+
 document.addEventListener("drop", dropShip, false);
 
 const battlefieldPlayer = [];
-for (let i = 0; i < 100; i++) {
-  battlefieldPlayer.push({ status: "free" });
-}
 const battlefieldEnemy = [];
 for (let i = 0; i < 100; i++) {
+  battlefieldPlayer.push({ status: "free" });
   battlefieldEnemy.push({ status: "free" });
 }
 
@@ -428,6 +348,7 @@ const manuallyArrange = () => {
   statusPlayer = "";
   generateContainerPlayerShip();
 };
+
 manualArrangeBtn.addEventListener("click", manuallyArrange);
 
 const playerFieldShip = document.getElementsByClassName(
@@ -457,18 +378,28 @@ const randomArrange = (arr, ship) => {
       } else {
         for (let i = +randomNumberFour; i < +randomNumberFour + 4; i++) {
           arr[i].status = "part4Ship";
-          arr[i + 10]?.status === "free" ? (arr[i + 10].status = "freeze") : "";
-          arr[i - 10]?.status === "free" ? (arr[i - 10].status = "freeze") : "";
-          arr[i + 1]?.status === "free" ? (arr[i + 1].status = "freeze") : "";
-          arr[i + 11]?.status === "free" ? (arr[i + 11].status = "freeze") : "";
-          arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
+          arr[i + 10]?.status === "free"
+            ? (arr[i + 10].status = "freeze")
+            : null;
+          arr[i - 10]?.status === "free"
+            ? (arr[i - 10].status = "freeze")
+            : null;
+          arr[i + 1]?.status === "free" ? (arr[i + 1].status = "freeze") : null;
+          arr[i + 11]?.status === "free"
+            ? (arr[i + 11].status = "freeze")
+            : null;
+          arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : null;
 
           if (randomNumberFour[1] !== "0") {
             arr[i - 11]?.status === "free"
               ? (arr[i - 11].status = "freeze")
-              : "";
-            arr[i - 1]?.status === "free" ? (arr[i - 1].status = "freeze") : "";
-            arr[i + 9]?.status === "free" ? (arr[i + 9].status = "freeze") : "";
+              : null;
+            arr[i - 1]?.status === "free"
+              ? (arr[i - 1].status = "freeze")
+              : null;
+            arr[i + 9]?.status === "free"
+              ? (arr[i + 9].status = "freeze")
+              : null;
           }
         }
       }
@@ -537,26 +468,26 @@ const randomArrange = (arr, ship) => {
 const checkRandomArrangeShip = (arr, i, number) => {
   number = number.length === 2 ? number : "0" + number;
   if (number[1] === "0") {
-    arr[i + 1]?.status === "free" ? (arr[i + 1].status = "freeze") : "";
-    arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
-    arr[i + 11]?.status === "free" ? (arr[i + 11].status = "freeze") : "";
-    arr[i - 10]?.status === "free" ? (arr[i - 10].status = "freeze") : "";
-    arr[i + 10]?.status === "free" ? (arr[i + 10].status = "freeze") : "";
+    arr[i + 1]?.status === "free" ? (arr[i + 1].status = "freeze") : null;
+    arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : null;
+    arr[i + 11]?.status === "free" ? (arr[i + 11].status = "freeze") : null;
+    arr[i - 10]?.status === "free" ? (arr[i - 10].status = "freeze") : null;
+    arr[i + 10]?.status === "free" ? (arr[i + 10].status = "freeze") : null;
   } else if (number[1] === "9") {
-    arr[i - 10]?.status === "free" ? (arr[i - 10].status = "freeze") : "";
-    arr[i - 1]?.status === "free" ? (arr[i - 1].status = "freeze") : "";
-    arr[i - 11]?.status === "free" ? (arr[i - 11].status = "freeze") : "";
-    arr[i + 9]?.status === "free" ? (arr[i + 9].status = "freeze") : "";
-    arr[i + 10]?.status === "free" ? (arr[i + 10].status = "freeze") : "";
+    arr[i - 10]?.status === "free" ? (arr[i - 10].status = "freeze") : null;
+    arr[i - 1]?.status === "free" ? (arr[i - 1].status = "freeze") : null;
+    arr[i - 11]?.status === "free" ? (arr[i - 11].status = "freeze") : null;
+    arr[i + 9]?.status === "free" ? (arr[i + 9].status = "freeze") : null;
+    arr[i + 10]?.status === "free" ? (arr[i + 10].status = "freeze") : null;
   } else {
-    arr[i + 1]?.status === "free" ? (arr[i + 1].status = "freeze") : "";
-    arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
-    arr[i + 11]?.status === "free" ? (arr[i + 11].status = "freeze") : "";
-    arr[i - 10]?.status === "free" ? (arr[i - 10].status = "freeze") : "";
-    arr[i - 1]?.status === "free" ? (arr[i - 1].status = "freeze") : "";
-    arr[i - 11]?.status === "free" ? (arr[i - 11].status = "freeze") : "";
-    arr[i + 9]?.status === "free" ? (arr[i + 9].status = "freeze") : "";
-    arr[i + 10]?.status === "free" ? (arr[i + 10].status = "freeze") : "";
+    arr[i + 1]?.status === "free" ? (arr[i + 1].status = "freeze") : null;
+    arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : null;
+    arr[i + 11]?.status === "free" ? (arr[i + 11].status = "freeze") : null;
+    arr[i - 10]?.status === "free" ? (arr[i - 10].status = "freeze") : null;
+    arr[i - 1]?.status === "free" ? (arr[i - 1].status = "freeze") : null;
+    arr[i - 11]?.status === "free" ? (arr[i - 11].status = "freeze") : null;
+    arr[i + 9]?.status === "free" ? (arr[i + 9].status = "freeze") : null;
+    arr[i + 10]?.status === "free" ? (arr[i + 10].status = "freeze") : null;
   }
 };
 
@@ -575,17 +506,7 @@ const createOneShip = (arr, number, ship) => {
     if (arr[+number].status === "free") {
       for (let i = +number; i < +number + 1; i++) {
         arr[i].status = "oneShip";
-        arr[i + 10]?.status === "free" ? (arr[i + 10].status = "freeze") : "";
-        arr[i - 10]?.status === "free" ? (arr[i - 10].status = "freeze") : "";
-        arr[i + 1]?.status === "free" ? (arr[i + 1].status = "freeze") : "";
-        arr[i + 11]?.status === "free" ? (arr[i + 11].status = "freeze") : "";
-        arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
-
-        if (number[1] !== "0") {
-          arr[i - 11]?.status === "free" ? (arr[i - 11].status = "freeze") : "";
-          arr[i - 1]?.status === "free" ? (arr[i - 1].status = "freeze") : "";
-          arr[i + 9]?.status === "free" ? (arr[i + 9].status = "freeze") : "";
-        }
+        checkRandomArrangeShip(arr, i, number);
       }
     } else {
       randomArrange(arr, ship);
@@ -615,19 +536,7 @@ const createTwoShips = (direction, arr, number, ship) => {
       ) {
         for (let i = +number; i < +number + 2; i++) {
           arr[i].status = "part2Ship";
-          arr[i + 10]?.status === "free" ? (arr[i + 10].status = "freeze") : "";
-          arr[i - 10]?.status === "free" ? (arr[i - 10].status = "freeze") : "";
-          arr[i + 1]?.status === "free" ? (arr[i + 1].status = "freeze") : "";
-          arr[i + 11]?.status === "free" ? (arr[i + 11].status = "freeze") : "";
-          arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
-
-          if (number[1] !== "0") {
-            arr[i - 11]?.status === "free"
-              ? (arr[i - 11].status = "freeze")
-              : "";
-            arr[i - 1]?.status === "free" ? (arr[i - 1].status = "freeze") : "";
-            arr[i + 9]?.status === "free" ? (arr[i + 9].status = "freeze") : "";
-          }
+          checkRandomArrangeShip(arr,i,number)
         }
       } else {
         randomArrange(arr, ship);
@@ -665,6 +574,7 @@ const createTwoShips = (direction, arr, number, ship) => {
     }
   }
 };
+
 const createThreeShip = (direction, arr, number, ship) => {
   if (direction === "horizontal") {
     if (number[1] === "7" || number[1] === "8" || number[1] === "9") {
@@ -688,19 +598,7 @@ const createThreeShip = (direction, arr, number, ship) => {
       ) {
         for (let i = +number; i < +number + 3; i++) {
           arr[i].status = "part3Ship";
-          arr[i + 10]?.status === "free" ? (arr[i + 10].status = "freeze") : "";
-          arr[i - 10]?.status === "free" ? (arr[i - 10].status = "freeze") : "";
-          arr[i + 1]?.status === "free" ? (arr[i + 1].status = "freeze") : "";
-          arr[i + 11]?.status === "free" ? (arr[i + 11].status = "freeze") : "";
-          arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
-
-          if (number[1] !== "0") {
-            arr[i - 11]?.status === "free"
-              ? (arr[i - 11].status = "freeze")
-              : "";
-            arr[i - 1]?.status === "free" ? (arr[i - 1].status = "freeze") : "";
-            arr[i + 9]?.status === "free" ? (arr[i + 9].status = "freeze") : "";
-          }
+          checkRandomArrangeShip(arr,i,number)
         }
       } else {
         randomArrange(arr, ship);
@@ -740,30 +638,31 @@ const createThreeShip = (direction, arr, number, ship) => {
     }
   }
 };
+
 const checkHorizontal = (number, arr, i) => {
   arr[i + 10]?.status === "free" || arr[i + 10]?.status === "freeze"
     ? (arr[i + 10].status = "freeze")
-    : "";
+    : null;
   arr[i - 10]?.status === "free" || arr[i - 10]?.status === "freeze"
     ? (arr[i - 10].status = "freeze")
-    : "";
+    : null;
   arr[i - 1]?.status === "free" || arr[i - 1]?.status === "freeze"
     ? (arr[i - 1].status = "freeze")
-    : "";
+    : null;
   arr[i - 11]?.status === "free" || arr[i - 11]?.status === "freeze"
     ? (arr[i - 11].status = "freeze")
-    : "";
+    : null;
   arr[i + 9]?.status === "free" || arr[i + 9]?.status === "freeze"
     ? (arr[i + 9].status = "freeze")
-    : "";
+    : null;
   if (number[1] !== "9") {
     arr[i + 1]?.status === "free" || arr[i + 1]?.status === "freeze"
       ? (arr[i + 1].status = "freeze")
-      : "";
+      : null;
     arr[i + 11]?.status === "free" || arr[i + 11]?.status === "freeze"
       ? (arr[i + 11].status = "freeze")
-      : "";
-    arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : "";
+      : null;
+    arr[i - 9]?.status === "free" ? (arr[i - 9].status = "freeze") : null;
   }
 };
 
@@ -783,6 +682,7 @@ const arrangePlayer = (arr, arrBattle, ship) => () => {
     item.classList.add(arr[j++].status);
   });
 };
+
 const arrangeEnemy = (arr, arrBattle, ship) => () => {
   let y = 0;
   randomArrange(arr, ship);
@@ -795,6 +695,7 @@ randomArrangeBtn.addEventListener(
   "click",
   arrangePlayer(battlefieldPlayer, playerFieldArray, shipsPlayer)
 );
+
 const firePlayer = (e) => {
   const target = e.target;
   let currentIndexField = enemyFieldArray.indexOf(target);
@@ -881,22 +782,27 @@ const fireEnemy = () => {
 
 const checkMiss = () => {
   battlefieldEnemy.forEach((item, index) => {
-    item.status === "miss" ? enemyFieldArray[index].classList.add("miss") : "";
+    item.status === "miss"
+      ? enemyFieldArray[index].classList.add("miss")
+      : null;
     if (item.status === "crush") {
       blockAttack(battlefieldEnemy, index);
       enemyFieldArray[index].classList.add("crush");
     }
-    item.status === "hit" ? enemyFieldArray[index].classList.add("hit") : "";
+    item.status === "hit" ? enemyFieldArray[index].classList.add("hit") : null;
   });
 };
+
 const checkMissEnemy = () => {
   battlefieldPlayer.forEach((item, index) => {
-    item.status === "miss" ? playerFieldArray[index].classList.add("miss") : "";
+    item.status === "miss"
+      ? playerFieldArray[index].classList.add("miss")
+      : null;
     if (item.status === "crush") {
       blockAttack(battlefieldPlayer, index);
       playerFieldArray[index].classList.add("crush");
     }
-    item.status === "hit" ? playerFieldArray[index].classList.add("hit") : "";
+    item.status === "hit" ? playerFieldArray[index].classList.add("hit") : null;
   });
 };
 
@@ -919,81 +825,82 @@ const blockAttack = (arr, index) => {
     arr[index - 1] &&
     (arr[index - 1]?.status === "miss" || arr[index - 1]?.status === "freeze")
       ? (arr[index - 1].status = "miss")
-      : "";
+      : null;
     (arr[index - 11] && arr[index - 11]?.status === "miss") ||
     arr[index - 11]?.status === "freeze"
       ? (arr[index - 11].status = "miss")
-      : "";
+      : null;
     (arr[index + 9] && arr[index + 9]?.status === "miss") ||
     arr[index + 9]?.status === "freeze"
       ? (arr[index + 9].status = "miss")
-      : "";
+      : null;
     (arr[index + 10] && arr[index + 10]?.status === "miss") ||
     arr[index + 10]?.status === "freeze"
       ? (arr[index + 10].status = "miss")
-      : "";
+      : null;
     (arr[index - 10] && arr[index - 10]?.status === "miss") ||
     arr[index - 10]?.status === "freeze"
       ? (arr[index - 10].status = "miss")
-      : "";
+      : null;
   } else if (String(index)[1] === "0") {
     index = +index;
     (arr[index + 10] && arr[index + 10]?.status === "miss") ||
     arr[index + 10]?.status === "freeze"
       ? (arr[index + 10].status = "miss")
-      : "";
+      : null;
     (arr[index + 1] && arr[index + 1]?.status === "miss") ||
     arr[index + 1]?.status === "freeze"
       ? (arr[index + 1].status = "miss")
-      : "";
+      : null;
     (arr[index - 10] && arr[index - 10]?.status === "miss") ||
     arr[index - 10]?.status === "freeze"
       ? (arr[index - 10].status = "miss")
-      : "";
+      : null;
     (arr[index + 11] && arr[index + 11]?.status === "miss") ||
     arr[index + 11]?.status === "freeze"
       ? (arr[index + 11].status = "miss")
-      : "";
+      : null;
     (arr[index - 9] && arr[index - 9]?.status === "miss") ||
     arr[index - 9]?.status === "freeze"
       ? (arr[index - 9].status = "miss")
-      : "";
+      : null;
   } else {
     index = +index;
     (arr[index - 1] && arr[index - 1]?.status === "miss") ||
     arr[index - 1]?.status === "freeze"
       ? (arr[index - 1].status = "miss")
-      : "";
+      : null;
     (arr[index - 11] && arr[index - 11]?.status === "miss") ||
     arr[index - 11]?.status === "freeze"
       ? (arr[index - 11].status = "miss")
-      : "";
+      : null;
     (arr[index + 9] && arr[index + 9]?.status === "miss") ||
     arr[index + 9]?.status === "freeze"
       ? (arr[index + 9].status = "miss")
-      : "";
+      : null;
     (arr[index + 10] && arr[index + 10]?.status === "miss") ||
     arr[index + 10]?.status === "freeze"
       ? (arr[index + 10].status = "miss")
-      : "";
+      : null;
     (arr[index - 10] && arr[index - 10]?.status === "miss") ||
     arr[index - 10]?.status === "freeze"
       ? (arr[index - 10].status = "miss")
-      : "";
+      : null;
     (arr[index - 9] && arr[index - 9]?.status === "miss") ||
     arr[index - 9]?.status === "freeze"
       ? (arr[index - 9].status = "miss")
-      : "";
+      : null;
     (arr[index + 1] && arr[index + 1]?.status === "miss") ||
     arr[index + 1]?.status === "freeze"
       ? (arr[index + 1].status = "miss")
-      : "";
+      : null;
     (arr[index + 11] && arr[index + 11]?.status === "miss") ||
     arr[index + 11]?.status === "freeze"
       ? (arr[index + 11].status = "miss")
-      : "";
+      : null;
   }
 };
+
 document.addEventListener("click", checkMiss);
 document.addEventListener("click", checkMissEnemy);
 
@@ -1028,10 +935,14 @@ const fireTwoShip = (arr, index) => {
       arr[index - 10]?.status === "hit")
   ) {
     arr[index].status = "crush";
-    arr[index + 1]?.status === "hit" ? (arr[index + 1].status = "crush") : "";
-    arr[index - 1]?.status === "hit" ? (arr[index - 1].status = "crush") : "";
-    arr[index + 10]?.status === "hit" ? (arr[index + 10].status = "crush") : "";
-    arr[index - 10]?.status === "hit" ? (arr[index - 10].status = "crush") : "";
+    arr[index + 1]?.status === "hit" ? (arr[index + 1].status = "crush") : null;
+    arr[index - 1]?.status === "hit" ? (arr[index - 1].status = "crush") : null;
+    arr[index + 10]?.status === "hit"
+      ? (arr[index + 10].status = "crush")
+      : null;
+    arr[index - 10]?.status === "hit"
+      ? (arr[index - 10].status = "crush")
+      : null;
   } else if (
     arr[index].status === "part2Ship" &&
     (arr[index + 1]?.status === "part2Ship" ||
@@ -1042,6 +953,7 @@ const fireTwoShip = (arr, index) => {
     arr[index].status = "hit";
   }
 };
+
 const fireThreeShip = (arr, index) => {
   if (
     arr[index].status === "part3Ship" &&
@@ -1055,24 +967,36 @@ const fireThreeShip = (arr, index) => {
       arr[index - 20]?.status === "hit")
   ) {
     arr[index].status = "crush";
-    arr[index + 1]?.status === "hit" ? (arr[index + 1].status = "crush") : "";
-    arr[index - 1]?.status === "hit" ? (arr[index - 1].status = "crush") : "";
-    arr[index + 10]?.status === "hit" ? (arr[index + 10].status = "crush") : "";
-    arr[index - 10]?.status === "hit" ? (arr[index - 10].status = "crush") : "";
-    arr[index + 2]?.status === "hit" ? (arr[index + 2].status = "crush") : "";
-    arr[index - 2]?.status === "hit" ? (arr[index - 2].status = "crush") : "";
-    arr[index + 20]?.status === "hit" ? (arr[index + 20].status = "crush") : "";
-    arr[index - 20]?.status === "hit" ? (arr[index - 20].status = "crush") : "";
+    arr[index + 1]?.status === "hit" ? (arr[index + 1].status = "crush") : null;
+    arr[index - 1]?.status === "hit" ? (arr[index - 1].status = "crush") : null;
+    arr[index + 10]?.status === "hit"
+      ? (arr[index + 10].status = "crush")
+      : null;
+    arr[index - 10]?.status === "hit"
+      ? (arr[index - 10].status = "crush")
+      : null;
+    arr[index + 2]?.status === "hit" ? (arr[index + 2].status = "crush") : null;
+    arr[index - 2]?.status === "hit" ? (arr[index - 2].status = "crush") : null;
+    arr[index + 20]?.status === "hit"
+      ? (arr[index + 20].status = "crush")
+      : null;
+    arr[index - 20]?.status === "hit"
+      ? (arr[index - 20].status = "crush")
+      : null;
   } else if (
     arr[index].status === "part3Ship" &&
     ((arr[index + 1]?.status === "hit" && arr[index - 1]?.status === "hit") ||
       (arr[index + 10]?.status === "hit" && arr[index - 10]?.status === "hit"))
   ) {
     arr[index].status = "crush";
-    arr[index + 1]?.status === "hit" ? (arr[index + 1].status = "crush") : "";
-    arr[index - 1]?.status === "hit" ? (arr[index - 1].status = "crush") : "";
-    arr[index + 10]?.status === "hit" ? (arr[index + 10].status = "crush") : "";
-    arr[index - 10]?.status === "hit" ? (arr[index - 10].status = "crush") : "";
+    arr[index + 1]?.status === "hit" ? (arr[index + 1].status = "crush") : null;
+    arr[index - 1]?.status === "hit" ? (arr[index - 1].status = "crush") : null;
+    arr[index + 10]?.status === "hit"
+      ? (arr[index + 10].status = "crush")
+      : null;
+    arr[index - 10]?.status === "hit"
+      ? (arr[index - 10].status = "crush")
+      : null;
   } else if (
     arr[index].status === "part3Ship" &&
     (arr[index + 1]?.status === "hit" ||
@@ -1089,6 +1013,7 @@ const fireThreeShip = (arr, index) => {
     arr[index].status = "hit";
   }
 };
+
 const fireFourShip = (arr, index) => {
   if (
     arr[index].status === "part4Ship" &&
@@ -1106,18 +1031,30 @@ const fireFourShip = (arr, index) => {
       arr[index - 30]?.status === "hit")
   ) {
     arr[index].status = "crush";
-    arr[index + 1]?.status === "hit" ? (arr[index + 1].status = "crush") : "";
-    arr[index - 1]?.status === "hit" ? (arr[index - 1].status = "crush") : "";
-    arr[index + 10]?.status === "hit" ? (arr[index + 10].status = "crush") : "";
-    arr[index - 10]?.status === "hit" ? (arr[index - 10].status = "crush") : "";
-    arr[index + 2]?.status === "hit" ? (arr[index + 2].status = "crush") : "";
-    arr[index - 2]?.status === "hit" ? (arr[index - 2].status = "crush") : "";
-    arr[index + 20]?.status === "hit" ? (arr[index + 20].status = "crush") : "";
-    arr[index - 20]?.status === "hit" ? (arr[index - 20].status = "crush") : "";
-    arr[index + 3]?.status === "hit" ? (arr[index + 3].status = "crush") : "";
-    arr[index - 3]?.status === "hit" ? (arr[index - 3].status = "crush") : "";
-    arr[index + 30]?.status === "hit" ? (arr[index + 30].status = "crush") : "";
-    arr[index - 30]?.status === "hit" ? (arr[index - 30].status = "crush") : "";
+    arr[index + 1]?.status === "hit" ? (arr[index + 1].status = "crush") : null;
+    arr[index - 1]?.status === "hit" ? (arr[index - 1].status = "crush") : null;
+    arr[index + 10]?.status === "hit"
+      ? (arr[index + 10].status = "crush")
+      : null;
+    arr[index - 10]?.status === "hit"
+      ? (arr[index - 10].status = "crush")
+      : null;
+    arr[index + 2]?.status === "hit" ? (arr[index + 2].status = "crush") : null;
+    arr[index - 2]?.status === "hit" ? (arr[index - 2].status = "crush") : null;
+    arr[index + 20]?.status === "hit"
+      ? (arr[index + 20].status = "crush")
+      : null;
+    arr[index - 20]?.status === "hit"
+      ? (arr[index - 20].status = "crush")
+      : null;
+    arr[index + 3]?.status === "hit" ? (arr[index + 3].status = "crush") : null;
+    arr[index - 3]?.status === "hit" ? (arr[index - 3].status = "crush") : null;
+    arr[index + 30]?.status === "hit"
+      ? (arr[index + 30].status = "crush")
+      : null;
+    arr[index - 30]?.status === "hit"
+      ? (arr[index - 30].status = "crush")
+      : null;
   } else if (
     (arr[index].status === "part4Ship" &&
       arr[index + 1]?.status === "hit" &&
@@ -1128,14 +1065,22 @@ const fireFourShip = (arr, index) => {
       (arr[index + 20]?.status === "hit" || arr[index - 20]?.status === "hit"))
   ) {
     arr[index].status = "crush";
-    arr[index + 1]?.status === "hit" ? (arr[index + 1].status = "crush") : "";
-    arr[index - 1]?.status === "hit" ? (arr[index - 1].status = "crush") : "";
-    arr[index + 10]?.status === "hit" ? (arr[index + 10].status = "crush") : "";
-    arr[index - 10]?.status === "hit" ? (arr[index - 10].status = "crush") : "";
-    arr[index + 2]?.status === "hit" ? (arr[index + 2].status = "crush") : "";
-    arr[index - 2]?.status === "hit" ? (arr[index - 2].status = "crush") : "";
-    arr[index + 20]?.status === "hit" ? (arr[index + 20].status = "crush") : "";
-    arr[index - 20]?.status === "hit" ? (arr[index - 20].status = "crush") : "";
+    arr[index + 1]?.status === "hit" ? (arr[index + 1].status = "crush") : null;
+    arr[index - 1]?.status === "hit" ? (arr[index - 1].status = "crush") : null;
+    arr[index + 10]?.status === "hit"
+      ? (arr[index + 10].status = "crush")
+      : null;
+    arr[index - 10]?.status === "hit"
+      ? (arr[index - 10].status = "crush")
+      : null;
+    arr[index + 2]?.status === "hit" ? (arr[index + 2].status = "crush") : null;
+    arr[index - 2]?.status === "hit" ? (arr[index - 2].status = "crush") : null;
+    arr[index + 20]?.status === "hit"
+      ? (arr[index + 20].status = "crush")
+      : null;
+    arr[index - 20]?.status === "hit"
+      ? (arr[index - 20].status = "crush")
+      : null;
   } else if (
     arr[index].status === "part4Ship" &&
     (arr[index + 1]?.status === "hit" ||
@@ -1165,12 +1110,9 @@ const startGame = () => {
       arrangePlayer(battlefieldPlayer, playerFieldArray, shipsPlayer)
     );
     manualArrangeBtn.removeEventListener("click", manuallyArrange);
-    document.removeEventListener("drag", drag, false);
     document.removeEventListener("dragstart", dragStart, false);
     document.removeEventListener("dragend", dragEnd, false);
     document.removeEventListener("dragover", dragOver, false);
-    document.removeEventListener("dragenter", dragEnter, false);
-    document.removeEventListener("dragleave", dragLeave, false);
     document.removeEventListener("drop", dropShip, false);
     arrangeEnemy(battlefieldEnemy, enemyFieldArray, shipsEnemy)();
     enemyFieldArray.forEach((item) => item.classList.add("white"));
@@ -1184,6 +1126,7 @@ const startGame = () => {
       : (manualArrangeBtn.disabled = false);
   }
 };
+
 const turnFire = () => {
   if (turn === "Компьютер") {
     setTimeout(fireEnemy, 400);
@@ -1192,6 +1135,7 @@ const turnFire = () => {
 
 document.addEventListener("click", blockRepeatAttack, true);
 start.addEventListener("click", startGame);
+
 const checkStatusBtn = () => {
   if (statusPlayer === "ready") {
     start.disabled = false;
@@ -1213,6 +1157,7 @@ const cancel = () => {
   Array.from(containerPlayerShip.children).forEach((item) => item.remove());
   cancelBtn.disabled = true;
 };
+
 document.addEventListener("click", checkStatusBtn);
 document.addEventListener("click", turnFire);
 document.addEventListener("click", gameOver);

@@ -10,7 +10,7 @@ let startFlag = false;
 let counterPlayer = 0;
 let counterEnemy = 0;
 let turn = "Игрок";
-let statusPlayer = "";
+let statusPlayer = null;
 const shipsPlayer = {
   oneShip1: null,
   oneShip2: null,
@@ -323,6 +323,7 @@ document.addEventListener("drop", dropShip, false);
 
 const battlefieldPlayer = [];
 const battlefieldEnemy = [];
+
 for (let i = 0; i < 100; i++) {
   battlefieldPlayer.push({ status: "free" });
   battlefieldEnemy.push({ status: "free" });
@@ -339,13 +340,12 @@ const manuallyArrange = () => {
   manualArrangeBtn.innerHTML = "Идет расстановка";
   cancelBtn.disabled = false;
   Array.from(containerPlayerShip.children).forEach((item) => item.remove());
-
   containerPlayerShip.style.opacity = 1;
   playerFieldArray.forEach(
     (item) => (item.className = "sea-battle__cell-player")
   );
   battlefieldPlayer.forEach((item) => (item.status = "free"));
-  statusPlayer = "";
+  statusPlayer = null;
   generateContainerPlayerShip();
 };
 
@@ -496,7 +496,6 @@ const createOneShip = (arr, number, ship) => {
     if (arr[+number].status === "free") {
       for (let i = +number; i > number - 1; i--) {
         arr[i].status = "oneShip";
-
         checkHorizontal(number, arr, i);
       }
     } else {
@@ -523,7 +522,6 @@ const createTwoShips = (direction, arr, number, ship) => {
       ) {
         for (let i = +number; i > number - 2; i--) {
           arr[i].status = "part2Ship";
-
           checkHorizontal(number, arr, i);
         }
       } else {
@@ -536,14 +534,13 @@ const createTwoShips = (direction, arr, number, ship) => {
       ) {
         for (let i = +number; i < +number + 2; i++) {
           arr[i].status = "part2Ship";
-          checkRandomArrangeShip(arr,i,number)
+          checkRandomArrangeShip(arr, i, number);
         }
       } else {
         randomArrange(arr, ship);
       }
     }
   }
-
   if (direction === "vertical") {
     if (number[0] === "9") {
       if (
@@ -598,7 +595,7 @@ const createThreeShip = (direction, arr, number, ship) => {
       ) {
         for (let i = +number; i < +number + 3; i++) {
           arr[i].status = "part3Ship";
-          checkRandomArrangeShip(arr,i,number)
+          checkRandomArrangeShip(arr, i, number);
         }
       } else {
         randomArrange(arr, ship);
@@ -806,7 +803,7 @@ const checkMissEnemy = () => {
   });
 };
 
-function blockRepeatAttack(e) {
+const blockRepeatAttack = (e) => {
   if (
     e.target.classList.contains("miss") ||
     e.target.classList.contains("crush") ||
@@ -815,7 +812,7 @@ function blockRepeatAttack(e) {
     e.stopPropagation();
     e.preventDefault();
   }
-}
+};
 
 const blockAttack = (arr, index) => {
   index = String(index).length === 1 ? "0" + String(index) : index;
@@ -925,24 +922,21 @@ function gameOver() {
     alert("Игрок победил");
   }
 }
+const checkCell = (arr, index, coeff = 1) => {
+  if (
+    arr[index + 1 * coeff]?.status === "hit" ||
+    arr[index - 1 * coeff]?.status === "hit" ||
+    arr[index + 10 * coeff]?.status === "hit" ||
+    arr[index - 10 * coeff]?.status === "hit"
+  ) {
+    return true;
+  }
+  return false;
+};
 
 const fireTwoShip = (arr, index) => {
-  if (
-    arr[index].status === "part2Ship" &&
-    (arr[index + 1]?.status === "hit" ||
-      arr[index - 1]?.status === "hit" ||
-      arr[index + 10]?.status === "hit" ||
-      arr[index - 10]?.status === "hit")
-  ) {
-    arr[index].status = "crush";
-    arr[index + 1]?.status === "hit" ? (arr[index + 1].status = "crush") : null;
-    arr[index - 1]?.status === "hit" ? (arr[index - 1].status = "crush") : null;
-    arr[index + 10]?.status === "hit"
-      ? (arr[index + 10].status = "crush")
-      : null;
-    arr[index - 10]?.status === "hit"
-      ? (arr[index - 10].status = "crush")
-      : null;
+  if (arr[index].status === "part2Ship" && checkCell(arr, index)) {
+    checkCrush(arr, index, 2);
   } else if (
     arr[index].status === "part2Ship" &&
     (arr[index + 1]?.status === "part2Ship" ||
@@ -957,32 +951,10 @@ const fireTwoShip = (arr, index) => {
 const fireThreeShip = (arr, index) => {
   if (
     arr[index].status === "part3Ship" &&
-    (arr[index + 1]?.status === "hit" ||
-      arr[index - 1]?.status === "hit" ||
-      arr[index + 10]?.status === "hit" ||
-      arr[index - 10]?.status === "hit") &&
-    (arr[index + 2]?.status === "hit" ||
-      arr[index - 2]?.status === "hit" ||
-      arr[index + 20]?.status === "hit" ||
-      arr[index - 20]?.status === "hit")
+    checkCell(arr, index, 1) &&
+    checkCell(arr, index, 2)
   ) {
-    arr[index].status = "crush";
-    arr[index + 1]?.status === "hit" ? (arr[index + 1].status = "crush") : null;
-    arr[index - 1]?.status === "hit" ? (arr[index - 1].status = "crush") : null;
-    arr[index + 10]?.status === "hit"
-      ? (arr[index + 10].status = "crush")
-      : null;
-    arr[index - 10]?.status === "hit"
-      ? (arr[index - 10].status = "crush")
-      : null;
-    arr[index + 2]?.status === "hit" ? (arr[index + 2].status = "crush") : null;
-    arr[index - 2]?.status === "hit" ? (arr[index - 2].status = "crush") : null;
-    arr[index + 20]?.status === "hit"
-      ? (arr[index + 20].status = "crush")
-      : null;
-    arr[index - 20]?.status === "hit"
-      ? (arr[index - 20].status = "crush")
-      : null;
+    checkCrush(arr, index, 3);
   } else if (
     arr[index].status === "part3Ship" &&
     ((arr[index + 1]?.status === "hit" && arr[index - 1]?.status === "hit") ||
@@ -1017,44 +989,11 @@ const fireThreeShip = (arr, index) => {
 const fireFourShip = (arr, index) => {
   if (
     arr[index].status === "part4Ship" &&
-    (arr[index + 1]?.status === "hit" ||
-      arr[index - 1]?.status === "hit" ||
-      arr[index + 10]?.status === "hit" ||
-      arr[index - 10]?.status === "hit") &&
-    (arr[index + 2]?.status === "hit" ||
-      arr[index - 2]?.status === "hit" ||
-      arr[index + 20]?.status === "hit" ||
-      arr[index - 20]?.status === "hit") &&
-    (arr[index + 3]?.status === "hit" ||
-      arr[index - 3]?.status === "hit" ||
-      arr[index + 30]?.status === "hit" ||
-      arr[index - 30]?.status === "hit")
+    checkCell(arr, index) &&
+    checkCell(arr, index, 2) &&
+    checkCell(arr, index, 3)
   ) {
-    arr[index].status = "crush";
-    arr[index + 1]?.status === "hit" ? (arr[index + 1].status = "crush") : null;
-    arr[index - 1]?.status === "hit" ? (arr[index - 1].status = "crush") : null;
-    arr[index + 10]?.status === "hit"
-      ? (arr[index + 10].status = "crush")
-      : null;
-    arr[index - 10]?.status === "hit"
-      ? (arr[index - 10].status = "crush")
-      : null;
-    arr[index + 2]?.status === "hit" ? (arr[index + 2].status = "crush") : null;
-    arr[index - 2]?.status === "hit" ? (arr[index - 2].status = "crush") : null;
-    arr[index + 20]?.status === "hit"
-      ? (arr[index + 20].status = "crush")
-      : null;
-    arr[index - 20]?.status === "hit"
-      ? (arr[index - 20].status = "crush")
-      : null;
-    arr[index + 3]?.status === "hit" ? (arr[index + 3].status = "crush") : null;
-    arr[index - 3]?.status === "hit" ? (arr[index - 3].status = "crush") : null;
-    arr[index + 30]?.status === "hit"
-      ? (arr[index + 30].status = "crush")
-      : null;
-    arr[index - 30]?.status === "hit"
-      ? (arr[index - 30].status = "crush")
-      : null;
+    checkCrush(arr, index, 4);
   } else if (
     (arr[index].status === "part4Ship" &&
       arr[index + 1]?.status === "hit" &&
@@ -1097,7 +1036,19 @@ const fireFourShip = (arr, index) => {
     arr[index].status = "hit";
   }
 };
-
+const checkCrush = (arr, index, n) => {
+  for (let i = 1; i < n; i++) {
+    arr[index + i * 0].status = "crush";
+    arr[index + i]?.status === "hit" ? (arr[index + i].status = "crush") : null;
+    arr[index - i]?.status === "hit" ? (arr[index - i].status = "crush") : null;
+    arr[index + i * 10]?.status === "hit"
+      ? (arr[index + i * 10].status = "crush")
+      : null;
+    arr[index - i * 10]?.status === "hit"
+      ? (arr[index - i * 10].status = "crush")
+      : null;
+  }
+};
 const startGame = () => {
   battleEnemy.addEventListener("click", firePlayer);
 

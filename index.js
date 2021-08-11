@@ -922,6 +922,7 @@ function gameOver() {
     alert("Игрок победил");
   }
 }
+
 const checkCell = (arr, index, coeff = 1) => {
   if (
     arr[index + 1 * coeff]?.status === "hit" ||
@@ -1036,6 +1037,7 @@ const fireFourShip = (arr, index) => {
     arr[index].status = "hit";
   }
 };
+
 const checkCrush = (arr, index, n) => {
   for (let i = 1; i < n; i++) {
     arr[index + i * 0].status = "crush";
@@ -1049,6 +1051,7 @@ const checkCrush = (arr, index, n) => {
       : null;
   }
 };
+
 const startGame = () => {
   battleEnemy.addEventListener("click", firePlayer);
 

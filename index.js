@@ -961,15 +961,7 @@ const fireThreeShip = (arr, index) => {
     ((arr[index + 1]?.status === "hit" && arr[index - 1]?.status === "hit") ||
       (arr[index + 10]?.status === "hit" && arr[index - 10]?.status === "hit"))
   ) {
-    arr[index].status = "crush";
-    arr[index + 1]?.status === "hit" ? (arr[index + 1].status = "crush") : null;
-    arr[index - 1]?.status === "hit" ? (arr[index - 1].status = "crush") : null;
-    arr[index + 10]?.status === "hit"
-      ? (arr[index + 10].status = "crush")
-      : null;
-    arr[index - 10]?.status === "hit"
-      ? (arr[index - 10].status = "crush")
-      : null;
+    checkCrush(arr, index, 2);
   } else if (
     arr[index].status === "part3Ship" &&
     (arr[index + 1]?.status === "hit" ||
@@ -1004,23 +996,7 @@ const fireFourShip = (arr, index) => {
       arr[index - 10]?.status === "hit" &&
       (arr[index + 20]?.status === "hit" || arr[index - 20]?.status === "hit"))
   ) {
-    arr[index].status = "crush";
-    arr[index + 1]?.status === "hit" ? (arr[index + 1].status = "crush") : null;
-    arr[index - 1]?.status === "hit" ? (arr[index - 1].status = "crush") : null;
-    arr[index + 10]?.status === "hit"
-      ? (arr[index + 10].status = "crush")
-      : null;
-    arr[index - 10]?.status === "hit"
-      ? (arr[index - 10].status = "crush")
-      : null;
-    arr[index + 2]?.status === "hit" ? (arr[index + 2].status = "crush") : null;
-    arr[index - 2]?.status === "hit" ? (arr[index - 2].status = "crush") : null;
-    arr[index + 20]?.status === "hit"
-      ? (arr[index + 20].status = "crush")
-      : null;
-    arr[index - 20]?.status === "hit"
-      ? (arr[index - 20].status = "crush")
-      : null;
+    checkCrush(arr, index, 3);
   } else if (
     arr[index].status === "part4Ship" &&
     (arr[index + 1]?.status === "hit" ||
